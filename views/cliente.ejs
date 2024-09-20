@@ -1,0 +1,53 @@
+<%- include('partials/header.ejs') %>
+
+
+<section id="header-exclusive">
+    <% if(locals.user){%>
+        <h1>
+            Seja bem Vindo <%= user.nome %> <%= user.sobrenome %> a sua area exclusiva.
+        </h1>
+        
+   <% } %>
+</section>
+
+</section>
+
+<section id="projetos">
+    <% if(locals.projetos){%>
+        <% if(projetos.length == 0){ %>
+            <p>
+                Voce ainda não tem projetos
+            </p>
+        <% }else{ %>
+
+        <% projetos.forEach(element =>{ %>
+            <a href="/detalhes-de-projeto/<%=element.id%>">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-title">
+                            <%= element.nome %>
+                        </div>
+                        <div class="card-subtitle">
+                            <%= element.endereco %>
+                        </div>
+                        <div class="card-subtitle">
+                            <%= element.finalidade %>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </a> 
+
+       <%}) %>
+
+        <% } %>
+        <% } %>
+
+
+</section>
+
+
+
+<%- include('partials/footer.ejs') %>

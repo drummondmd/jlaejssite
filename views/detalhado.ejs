@@ -1,0 +1,126 @@
+<%- include('partials/header.ejs') %>
+
+
+<section id="header-exclusive">
+    <% if(locals.user){%>
+        <h1>
+            Aqui esta seu projeto,  <%= user.nome %> <%= user.sobrenome %>.
+        </h1>
+        
+   <% } %>
+</section>
+<section id="header-de-projeto">
+    <% if(locals.projeto){%>
+        <h2 class="h2"><%= projeto.nome %></h2>
+        <p><%= projeto.endereco %></p>
+        <p><%= projeto.finalidade %></p>
+        
+   <% } %>
+
+</section>
+
+
+<div class="container text-center">
+    <div class="row">
+        <div class="col">
+            <h3 class="fs-2 text-body-emphasis">Fotos do projeto</h3>
+            <section id="arquivos">
+                <% if(locals.imagens){%>
+                    <% if(imagens.length == 0){ %>
+                    <p>
+                        Aqui ficarão as imagens do seu projeto, por enquanto não temos nenhum. 
+                    </p>
+                <% }else{ %>
+                    <% imagens.forEach((element)=>{%>
+                        <a href="<%=element%>">
+                            <i class="bi bi-file-earmark-image"></i>                        </a>
+            
+                   <% }) %>
+            
+               <% } %>
+               <% } %>
+            
+            </section>
+            
+        </div>
+        <div class="col">
+            <h3 class="fs-2 text-body-emphasis">Arquivos do projeto</h3>
+            <section id="arquivos">
+                <% if(locals.arquivos){%>
+                    <% if(arquivos.length == 0){ %>
+                    <p>
+                        Aqui ficarão arquivos do projeto, por enquanto não temos nenhum. 
+                    </p>
+                <% }else{ %>
+                    <% arquivos.forEach((element)=>{%>
+                        <a href="<%=element%>">
+                            <i class="bi bi-file-word"></i>
+                        </a>
+            
+                   <% }) %>
+            
+               <% } %>
+               <% } %>
+            
+            </section>
+            
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h3 class="fs-2 text-body-emphasis">Documentos do projeto</h3>
+            <section id="documentos">
+                <% if(locals.documentos){%>
+                    <% if(documentos.length == 0){ %>
+                    <p>
+                        Aqui ficarão documentos, por enquanto não temos nenhum. 
+                    </p>
+                <% }else{ %>
+                    <% documentos.forEach((element)=>{%>
+                        <a href="<%=element%>">
+                            <i class="bi bi-file-word"></i>
+                        </a>
+            
+                   <% }) %>
+            
+               <% } %>
+               <% } %>
+            
+            </section>
+
+        </div>
+        <div class="col">
+            <h3 class="fs-2 text-body-emphasis">Estimativa de investimento</h3>
+
+            <section id="spreadsheet">
+                <% if(locals.spreadsheet){%>
+                    <% if(spreadsheet.length == 0){ %>
+                    <p>
+                        Aqui ficarão as tabelas do projeto, por enquanto não temos nenhum. 
+                    </p>
+                <% }else{ %>
+                    <% spreadsheet.forEach((element)=>{%>
+                        <a href="<%=element%>">
+                            <i class="bi bi-file-earmark-spreadsheet"></i>                        </a>
+            
+                   <% }) %>
+            
+               <% } %>
+               <% } %>
+            
+            </section>       
+        
+        
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+
+
+
+<%- include('partials/footer.ejs') %>

@@ -1,0 +1,231 @@
+<%- include('partials/header.ejs') %>
+
+<div class="container">
+
+    <% if(locals.projeto){%>
+        <p>
+            <%=projeto.nome%>
+
+        </p>
+        <p><%=projeto.finalidade%></p>
+        <p><%=projeto.endereco%></p>
+        <ul>
+            <li><button class="button-link" id="vincular-cliente-button"> Vincular cliente</button></li>
+            <li><button class="button-link" id="edit-form-button"> Editar dados de projeto</button></li>
+            <li><button class="button-link" id="adicionar-link-button"> Adicionar arquivos de projeto</button></li>
+            <li><button class="button-link" id="voltar"> Voltar</button></li>
+        </ul>
+</div>
+
+<section id="vincular-cliente" style="display: none;">
+    <form action="/client-add" method="post">
+        <input type="number" name="project_id" readonly value="<%= projeto.id %>">
+        <label for="cliente">Escolha o cliente do projeto</label>
+        <select name="cliente" id="">
+            <option >Selecione usuário:</option>
+            <% if(locals.users){%>
+                <% users.forEach((elem)=>{%>
+                   <option value="<%=elem.id%>"><%=elem.nome%></option>
+               <% }) %>
+            <%}else{%>
+                <option> Algo deu errado</option>
+           <% } %>
+        </select>
+        <button>Vincular</button>
+    </form>
+
+
+</section>
+
+<div class="container">
+    <div class="row">
+        <section clas="section-edit" id="edit-form" style="display: none;">
+
+        <div class="col">
+            <div class="container">
+                <form action="/editar-projeto" method="post">
+                    <div class="form-group">
+                        <label for="id">ID</label>
+                        <input type="text" name="id" value="<%=projeto.id%>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="nomedoprojeto">Nome do projeto</label>
+                        <input class="form-control" type="text" name="nome" id="nomedoprojeto" value="<%=projeto.nome%>">
+                    </div>
+                    <div class="form-control">
+                        <label for="enderecodoprojeto">Endereço:</label>
+                        <input class="form-control" type="text" name="endereco" id="enderecodoprojeto" value="<%=projeto.endereco%>">
+                    </div>
+                    <div class="form-group">
+                        <label for="orcamento">Orçamento:</label>
+                        <input class="form-control" type="number" name="orcamento" id="orcamento" value="<%=projeto.orcamento%>">
+                    </div>
+                    <div class="form-group">
+                        <label for="custoobra">Custo da obra:</label>
+                        <input class="form-control" type="number" name="custo_obra" id="custoobra" value="<%=projeto.custo_obra%>">
+                    </div>
+                    <div class="form-group">
+                        <select class="form-select" name="finalidade" id="">
+                            <option value="residencial">Residencial</option>
+                            <option value="comercial">Comercial</option>
+                            <option value="corporativo">Corporativo</option>
+                            <option value="outros">Outros</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <span>Mostrar em Homepage</span>
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" id="simcheckdisplay"name="display" value="true">
+                            <label class="form-check-label" for="simcheckdisplay">Sim</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" id="naocheckdisplay"name="display" value="false">
+                            <label class="form-check-label" for="naocheckdisplay">Não</label>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span>Projeto Ativo</span>
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" id="simcheckativo" name="ativo" value="true">
+                            <label class="form-check-label" for="simcheckativo">Sim</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" id="naocheckativo" name="ativo" value="false">
+                            <label class="form-check-label" for="naocheckativo">Não</label>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <% if(locals.users){%>
+                            <div class="form-group">
+                                <select class="form-select" name="cliente" id="">
+                                    <option value="">Selecionar cliente</option>
+                                    <% users.forEach(element => {%>
+                                        <option value="<%= element.id %>"> <%= element.nome%> <%= element.sobrenome%> </option>
+            
+            
+            
+                                   <% }) %>
+                                    </select>
+                                
+                            </div>
+            
+                       <% }else{ %>
+                        <input class="form-control" type="text" name="cliente">
+            
+            
+            
+                        <% }%>
+            
+            
+            
+            
+                    </div>
+                    <input type="submit" class="btn btn-outline-primary">
+            
+                </form>
+                
+            
+            
+            </div>
+
+        </div>
+        </section>
+
+        <div class="col">
+            <div clas="section-edit" id="adicionar-link" style="display: none;">
+                <form action="/link-add" method="post">
+                    <input name="id" type="number" readonly value="<%=projeto.id%>" >
+                
+                    <label for="type">Tipo de documento</label>
+                    <select name="type" id="type">
+                        <option selected >...</option>
+                        <option value="spreadsheet">Tabela</option>
+                        <option value="imagens">Imagens</option>
+                        <option value="documentos">Documentos do projeto</option>
+                        <option value="arquivos">Arquivos de projeto</option>
+                    </select>
+                    <label for="nomelink">Nome</label>
+                    <input type="text" id="nomelink" name="nomelink"required>
+                    <label for="link">Link</label>
+                    <input type="text" name="link" id="link">
+                    <label for="obslink">Observação</label>
+                    <input type="text" name="obslink" id="obslink">
+                    <label for="type">Tipo de documento</label>
+                    <select name="type" id="type">
+                        <option selected >...</option>
+                        <option value="spreadsheet">Tabela</option>
+                        <option value="imagens">Imagens</option>
+                        <option value="documentos">Documentos do projeto</option>
+                        <option value="arquivos">Arquivos de projeto</option>
+                    </select>
+                    <label for="nomelink">Nome</label>
+                    <input type="text" id="nomelink" name="nomelink"required>
+                    <label for="link">Link</label>
+                    <input type="text" name="link" id="link">
+                    <label for="obslink">Observação</label>
+                    <input type="text" name="obslink" id="obslink">
+                    <input type="submit" value="Enviar">
+                </form>
+                <button>Acrescentar outro</button>
+
+            
+                form para adicionar links
+
+            </div>
+            <div id="actual-documents" style="display: none;">
+                <p>
+                    Documentos atuais
+                </p>
+                <div>
+                    <% if(locals.documentos){ %>
+                        <ul>
+                            <li>Fotos</li>
+                            <% documentos.arrayImagens.forEach((element)=>{%>
+                                <li><%=element.link%></li>
+                           <% })  %>
+                        </ul>
+                        
+                        <% } %>
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+</section>
+
+
+<% }else{%>
+    <p>Ooops, algo deu errado</p>
+<%} %>
+
+<%- include('partials/footer.ejs') %>
+
+<script>
+        $(".button-link").on("click",function(){
+        let lastClicked = null
+        let clicked =this.id
+        let lenghtWord = clicked.length
+        let word = clicked.substr(0,(lenghtWord-7))
+        let order = $("#" + word+"")
+        console.log(order)
+        console.log(lastClicked)
+        if(lastClicked){
+            console.log("existe")
+            lastClicked.toggle()
+        }
+        order.toggle()
+        lastClicked = order
+        console.log(lastClicked)
+        // $(".section-edit").css("display:none")
+        // $("#"+order+"").toggle()
+    
+    });
+
+
+
+</script>
