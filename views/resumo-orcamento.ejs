@@ -1,0 +1,40 @@
+<%- include ('partials/header.ejs') %>
+
+<% if (locals.resumo){ %>
+
+    <h2>Detalhes do Projeto</h2>
+
+    <p>Cliente: <%= resumo.nome_cliente %></p>
+    <p>Nome do Projeto: <%= resumo.nome_projeto %></p>
+    <p>Endereço: <%= resumo.endereco %> </p>
+    <p>Cidade: <%= resumo.cidade %> </p>
+    <p>Ambientes:</p>
+    <p><%if(resumo.a_0_nome){%><%=resumo.a_0_nome%><%}%></p>
+    <p><%if(resumo.a_1_nome){%><%=resumo.a_1_nome%><%}%></p>
+    <p><%if(resumo.a_2_nome){%><%=resumo.a_2_nome%><%}%></p>
+    <p><%if(resumo.a_3_nome){%><%=resumo.a_3_nome%><%}%></p>
+    <p><%if(resumo.a_4_nome){%><%=resumo.a_4_nome%><%}%></p>
+    <p><%if(resumo.a_5_nome){%><%=resumo.a_5_nome%><%}%></p>
+    <p><%if(resumo.a_6_nome){%><%=resumo.a_6_nome%><%}%></p>
+    <p><%if(resumo.a_7_nome){%><%=resumo.a_7_nome%><%}%></p>
+    <p><%if(resumo.a_8_nome){%><%=resumo.a_8_nome%><%}%></p>
+    <p><%if(resumo.a_9_nome){%><%=resumo.a_9_nome%><%}%></p>
+    <p><%if(resumo.a_10_nome){%><%=resumo.a_10_nome%><%}%></p>
+    <h3>Valor do investimento:</h3>
+    <p>R$: <%=resumo.total%></p>
+    
+    <p>Baixar arquivo DOC</p>
+    Link estará aqui - fazer depois
+
+
+
+
+
+<%}else{ %>
+<p>
+    Algo deu errado
+</p>
+<% } %>
+
+
+<%- include ('partials/footer.ejs') %>

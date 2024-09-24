@@ -283,6 +283,17 @@ app.post(
         res.redirect("/admin/home")
 
     })
+
+    ///post request orçamento
+
+    app.post("/novo-orcamento",async(req,res)=>{
+        console.log(req.body)
+        let resumo = req.body
+        // Fazer query depois
+        res.render("resumo-orcamento.ejs",{resumo:resumo})
+    
+
+    })
     
     
     //autentication
