@@ -45,7 +45,20 @@ app.get("/", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-    res.render("login.ejs");
+    if(req.user){
+        switch (req.user.administrador) {
+            case true:
+            res.redirect("/admin/home")
+            break;
+            default:
+            res.redirect("/clientes")
+            break;
+        }
+        
+    }else{
+        res.render("login.ejs");
+    }
+
 });
 
 app.get("/register",(req,res)=>{
@@ -343,40 +356,10 @@ app.post(
     
     ///basic functions
     app.get("/teste", async(req,res)=>{
-        const projectId = 1
-        const array = await getDocuments(projectId)
-        console.log(array)
-        const imagens = array.arrayImagens.map((element)=>element.link)
-        const spreadsheet = array.arraySpreadsheet.map((element)=>element.link)
-        const documentos = array.arrayDocumentos.map((element)=>element.link)
-        const arquivos = array.arrayArquivos.map((element)=>element.link)
+        let user = req.user
+        console.log(user)
+        res.render("admin.ejs")
 
-
-        console.log(imagens)
-        console.log(documentos)
-        console.log(spreadsheet)
-
-
-        // const foto = array.map((element)=>{
-        //     if(element.type == "foto"){
-        //         element.link
-        //     }
-        // })
-        // // const foto = array.filter((element) =>element.type == "foto" )
-        // // const spreadsheetLinks = spreadsheet.map((element)=>element.link)
-        // console.log(foto)
-        // console.log(spreadsheet)
-        // console.log(spreadsheetLinks)
-
-        // console.log(outracoisa)
-
-        // function get documents
-
-
-        ///fazer map aqui e mandar separado
-
-
-        res.sendStatus(200)
     
     })
     
