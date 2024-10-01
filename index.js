@@ -86,7 +86,7 @@ app.get("/admin/:route",async (req,res)=>{
         res.render("admin.ejs",{user:user})
         break;
         case "projetos": 
-        res.render("admin.ejs",{projetos:projetos,users:user})
+        res.render("admin.ejs",{projetos:projetos})
         break;
         case "edit":
         const id = req.query.id
@@ -162,19 +162,14 @@ app.get("/detalhes-de-projeto/:id",async (req,res)=>{
 
 //post request
 
-app.post(
+    app.post(
     "/login",
     passport.authenticate("local", {
         failureRedirect: "/login",
         successRedirect:"/redirect",
         failureMessage:true 
     })) 
-    
-    // app.post("/login", (req,res)=>{
-    //     console.log(req.body)
-    //     res.sendStatus(200)
-    // })
-    
+
     app.post("/register",async (req,res)=> {
         const dn = new Date(req.body.dn)
         console.log(req.body,dn)

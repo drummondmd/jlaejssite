@@ -1,191 +1,201 @@
 <%- include('partials/header.ejs') %>
 
+<div class="container">
+    <div>
+        <img src="" alt=""> Foto
+        <p>Olá Nome, Seja Bem Vindo</p>
+    </div>
+    <div class="row">
+        <div class="col-3">
+            <ul class="nav nav-pills flex-column">
+                <li class="nav-item"><a href="/admin/home">Home</a></li>
+                <li><a href="/admin/usuarios">Usuarios</a></li>
+                <li><a href="/admin/projetos">Projetos</a></li>
+                <li><a href="/admin/orcamentos">Orçamentos</a></li>
+        </div>
+        <div class="col-9">
+            <div class="row">
 
-<section id="menu">
-<ul class="nav flex-column col-3">
-    <li><a href="/admin/home">Home</a></li>
-    <li><a href="/admin/usuarios">Usuarios</a></li>
-    <li><a href="/admin/projetos">Projetos</a></li>
-    <li><a href="/admin/orcamentos">Orçamentos</a></li>
+                <% if(locals.user){%>
+                    <% user.forEach(element => {%>
+                        <div class="card m-2" style="width: 18rem;" >
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <%=element.nome%> 
+                                    <%=element.sobrenome%>
+                                </h5>
+                                <h6 class="card-subtitle">
+                                    <%=element.email%>
+                                </h6>
+                                <form action="/updateUser/<%=element.id%>" method="post">
+                                    <div class="input-group">
+                                        <span>
+                                            Administrador:
+                                        </span>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="administrador" value="true"
+                                            <% if(element.administrador == true){%>
+                                                checked
+                                            <%}%>
+                                            onchange="this.form.submit()"
+                                            >
+                                            <label class="form-check-label" for="flexSwitchCheckChecked">Sim</label>
+                                          </div>
+                                          <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="administrador" value="false"
+                                            <% if(element.administrador == false){%>
+                                                checked
+                                            <%}%>
+                                            onchange="this.form.submit()"
+                                            >
+                                            <label class="form-check-label" for="flexSwitchCheckChecked">Não</label>
+                                          </div>
+                                    </div>
 
 
-
-
-</ul>
-</section>
-
-<section id="user">
-    <% if(locals.user){%>
-        <a href="/register">Criar novo usuario</a>
-        <% user.forEach(element => {%>
-            <div class="card" style="width: 18rem;" >
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <%=element.nome%> 
-                        <%=element.sobrenome%>
-                    </h5>
-                    <h6 class="card-subtitle">
-                        <%=element.email%>
-                    </h6>
-                    <form action="/updateUser/<%=element.id%>" method="post">
-                        <div class="input-group">
-                            <span>
-                                Administrador:
-                            </span>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="administrador" value="true"
-                                <% if(element.administrador == true){%>
-                                    checked
-                                <%}%>
-                                onchange="this.form.submit()"
-                                >
-                                <label class="form-check-label" for="flexSwitchCheckChecked">Sim</label>
-                              </div>
-                              <div class="form-check">
-                                <input class="form-check-input" type="radio" name="administrador" value="false"
-                                <% if(element.administrador == false){%>
-                                    checked
-                                <%}%>
-                                onchange="this.form.submit()"
-                                >
-                                <label class="form-check-label" for="flexSwitchCheckChecked">Não</label>
-                              </div>
+                                </form>
+            
+                            </div>
+            
                         </div>
-                        <div class="input-group">
-                            <span>
-                                Verificado:
-                            </span>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="verificado" value="true"
-                                <% if(element.verificado == true){%>
-                                    checked
-                                <%}%>
-                                onchange="this.form.submit()"
-                                >
-                                <label class="form-check-label" for="flexSwitchCheckChecked">Sim</label>
-                              </div>
-                              <div class="form-check">
-                                <input class="form-check-input" type="radio" name="verificado" value="false"
-                                <% if(element.verificado == false){%>
-                                    checked
-                                <%}%>
-                                onchange="this.form.submit()"
-                                >
-                                <label class="form-check-label" for="flexSwitchCheckChecked">Não</label>
-                              </div>
+                        
+            <%        }); %>
+                    
+                <%}else if(locals.projetos){%>
+                    <div class="row">
+                        <div class="col">
+                            <button type="button" id="atuaisBtn" class="btn col-12">Projetos Atuais</button>
+                        </div>
+                        <div class="col">
+                            <button type="button" id="novoBtn" class="btn  col-12">Novo Projeto</button>
+                        </div>
+                    </div>
 
+
+                    <div id="novo-projeto" style="display: none;">
+                        <form action="/projeto-novo" method="post">
+                            <div class="form-group">
+                                <label for="nomedoprojeto">Nome do projeto</label>
+                                <input class="form-control" type="text" name="nome" id="nomedoprojeto">
+                            </div>
+                            <div class="form-control">
+                                <label for="enderecodoprojeto">Endereço:</label>
+                                <input class="form-control" type="text" name="endereco" id="enderecodoprojeto">
+                            </div>
+                            <div class="form-group">
+                                <label for="orcamento">Orçamento:</label>
+                                <input class="form-control" type="number" name="orcamento" id="orcamento">
+                            </div>
+                            <div class="form-group">
+                                <label for="custoobra">Custo da obra:</label>
+                                <input class="form-control" type="number" name="custo_obra" id="custoobra">
+                            </div>
+                            <div class="form-group">
+                                <select class="form-select" name="finalidade" id="">
+                                    <option value="residencial">Residencial</option>
+                                    <option value="comercial">Comercial</option>
+                                    <option value="corporativo">Corporativo</option>
+                                    <option value="outros">Outros</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <span>Mostrar em Homepage</span>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" id="simcheckdisplay"name="display" value="true">
+                                    <label class="form-check-label" for="simcheckdisplay">Sim</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" id="naocheckdisplay"name="display" value="false">
+                                    <label class="form-check-label" for="naocheckdisplay">Não</label>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <span>Projeto Ativo</span>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" id="simcheckativo" name="ativo" value="true">
+                                    <label class="form-check-label" for="simcheckativo">Sim</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" id="naocheckativo" name="ativo" value="false">
+                                    <label class="form-check-label" for="naocheckativo">Não</label>
+                                </div>
+                            </div>
+                            <input type="submit" class="btn btn-outline-primary">
+                            
+                        </form>
+
+                    </div>
+                        
+            
+                    <div id="projetos-atuais">
+                        <div class="row">
+                            <% projetos.forEach(element=>{ %>
+                                <div class="col-3 my-2">
+                                    <a href="/admin/edit?id=<%=element.id%>">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="card-title">
+                                                    <%= element.nome %>
+                                                </div>
+                                                <div class="card-subtitle">
+                                                    <%= element.endereco %>
+                                                </div>
+                                            </div>
+                                        </div>
+                    
+                    
+                    
+                                    </a>  
+
+                                </div>
+       
+                
+                            <% }) %>
 
                         </div>
-                    </form>
 
-                </div>
+            
+                    </div>
+
+                <%}else{%>
+            
+                    <div class="col-6">
+                        Projetos em andamento
+            
+                    </div>
+                    <div class="col-6">
+                        Orçamentos em aberto
+            
+                    </div>
+            
+            
+                <%}%>
+
+
+
 
             </div>
-            
-<%        }); %>
-        
-    <%}%>
-
-</section>
-
-<section id="projeto">
-    <% if(locals.projetos){%>
-        <button id="criar-projeto">
-            <p> Criar novo projeto</p>
-            <p style="display: none;">Voltar</p>
-           
-        </button>
-        <section id="novo-projeto" style="display: none;">
-            <form action="/projeto-novo" method="post">
-                <div class="form-group">
-                    <label for="nomedoprojeto">Nome do projeto</label>
-                    <input class="form-control" type="text" name="nome" id="nomedoprojeto">
-                </div>
-                <div class="form-control">
-                    <label for="enderecodoprojeto">Endereço:</label>
-                    <input class="form-control" type="text" name="endereco" id="enderecodoprojeto">
-                </div>
-                <div class="form-group">
-                    <label for="orcamento">Orçamento:</label>
-                    <input class="form-control" type="number" name="orcamento" id="orcamento">
-                </div>
-                <div class="form-group">
-                    <label for="custoobra">Custo da obra:</label>
-                    <input class="form-control" type="number" name="custo_obra" id="custoobra">
-                </div>
-                <div class="form-group">
-                    <select class="form-select" name="finalidade" id="">
-                        <option value="residencial">Residencial</option>
-                        <option value="comercial">Comercial</option>
-                        <option value="corporativo">Corporativo</option>
-                        <option value="outros">Outros</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <span>Mostrar em Homepage</span>
-                    <div class="form-check">
-                        <input type="radio" class="form-check-input" id="simcheckdisplay"name="display" value="true">
-                        <label class="form-check-label" for="simcheckdisplay">Sim</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="radio" class="form-check-input" id="naocheckdisplay"name="display" value="false">
-                        <label class="form-check-label" for="naocheckdisplay">Não</label>
-                    </div>
-                </div>
-                <div class="input-group">
-                    <span>Projeto Ativo</span>
-                    <div class="form-check">
-                        <input type="radio" class="form-check-input" id="simcheckativo" name="ativo" value="true">
-                        <label class="form-check-label" for="simcheckativo">Sim</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="radio" class="form-check-input" id="naocheckativo" name="ativo" value="false">
-                        <label class="form-check-label" for="naocheckativo">Não</label>
-                    </div>
-                </div>
-                <input type="submit" class="btn btn-outline-primary">
-                
-            </form>
-            
-
-        </section>
-        <section id="projetos-atuais">
 
 
-            <% projetos.forEach(element=>{ %>
-                <a href="/admin/edit?id=<%=element.id%>">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="card-title">
-                                <%= element.nome %>
-                            </div>
-                            <div class="card-subtitle">
-                                <%= element.endereco %>
-                            </div>
-                        </div>
-                    </div>
+        </div>
 
+    </div>
 
-
-                </a>    
-
-            <% }) %>
-
-            Projetos atuais
-
-        </section>        
-    <%} %>
-
-
-</section>
-
-
-
+</div>
 
 <%- include('partials/footer.ejs') %>
+
 <script>
-    $("#criar-projeto").on("click",function(){
-        $('#novo-projeto,#projetos-atuais').toggle()
-        $("#criar-projeto>p").toggle()
-    });
+
+    $("#novoBtn").on("click",function(){
+        $("#novo-projeto").show();
+        $("#projetos-atuais").hide();
+    })
+
+    $("#atuaisBtn").on("click",function(){
+        $("#novo-projeto").hide();
+        $("#projetos-atuais").show();
+    })
+
+
 </script>
