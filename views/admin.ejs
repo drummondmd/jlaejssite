@@ -1,28 +1,17 @@
 <%- include('partials/header.ejs') %>
+<%- include ('partials/admin-header.ejs') %>
 
-<div class="container">
-    <div>
-        <img src="" alt=""> Foto
-        <p>Olá Nome, Seja Bem Vindo</p>
-    </div>
-    <div class="row">
-        <div class="col-3">
-            <ul class="nav nav-pills flex-column">
-                <li class="nav-item"><a href="/admin/home">Home</a></li>
-                <li><a href="/admin/usuarios">Usuarios</a></li>
-                <li><a href="/admin/projetos">Projetos</a></li>
-                <li><a href="/admin/orcamentos">Orçamentos</a></li>
-        </div>
-        <div class="col-9">
-            <div class="row">
-
-                <% if(locals.user){%>
-                    <% user.forEach(element => {%>
-                        <div class="card m-2" style="width: 18rem;" >
+<div class="col-10">
+    <div id="user">
+        <div class="row container">
+            <% if(locals.user){%>
+                <% user.forEach(element=> {%>
+                    <div class="col-3">
+                        <div class="card m-2" style="width: 18rem;">
                             <div class="card-body">
                                 <h5 class="card-title">
-                                    <%=element.nome%> 
-                                    <%=element.sobrenome%>
+                                    <%=element.nome%>
+                                        <%=element.sobrenome%>
                                 </h5>
                                 <h6 class="card-subtitle">
                                     <%=element.email%>
@@ -33,169 +22,123 @@
                                             Administrador:
                                         </span>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="administrador" value="true"
-                                            <% if(element.administrador == true){%>
-                                                checked
+                                            <input class="form-check-input" type="radio" name="administrador"
+                                                value="true" <% if(element.administrador==true){%>
+                                            checked
                                             <%}%>
-                                            onchange="this.form.submit()"
-                                            >
-                                            <label class="form-check-label" for="flexSwitchCheckChecked">Sim</label>
-                                          </div>
-                                          <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="administrador" value="false"
-                                            <% if(element.administrador == false){%>
-                                                checked
-                                            <%}%>
-                                            onchange="this.form.submit()"
-                                            >
-                                            <label class="form-check-label" for="flexSwitchCheckChecked">Não</label>
-                                          </div>
-                                    </div>
-
-
-                                </form>
-            
-                            </div>
-            
-                        </div>
-                        
-            <%        }); %>
-                    
-                <%}else if(locals.projetos){%>
-                    <div class="row">
-                        <div class="col">
-                            <button type="button" id="atuaisBtn" class="btn col-12">Projetos Atuais</button>
-                        </div>
-                        <div class="col">
-                            <button type="button" id="novoBtn" class="btn  col-12">Novo Projeto</button>
-                        </div>
-                    </div>
-
-
-                    <div id="novo-projeto" style="display: none;">
-                        <form action="/projeto-novo" method="post">
-                            <div class="form-group">
-                                <label for="nomedoprojeto">Nome do projeto</label>
-                                <input class="form-control" type="text" name="nome" id="nomedoprojeto">
-                            </div>
-                            <div class="form-control">
-                                <label for="enderecodoprojeto">Endereço:</label>
-                                <input class="form-control" type="text" name="endereco" id="enderecodoprojeto">
-                            </div>
-                            <div class="form-group">
-                                <label for="orcamento">Orçamento:</label>
-                                <input class="form-control" type="number" name="orcamento" id="orcamento">
-                            </div>
-                            <div class="form-group">
-                                <label for="custoobra">Custo da obra:</label>
-                                <input class="form-control" type="number" name="custo_obra" id="custoobra">
-                            </div>
-                            <div class="form-group">
-                                <select class="form-select" name="finalidade" id="">
-                                    <option value="residencial">Residencial</option>
-                                    <option value="comercial">Comercial</option>
-                                    <option value="corporativo">Corporativo</option>
-                                    <option value="outros">Outros</option>
-                                </select>
-                            </div>
-                            <div class="input-group">
-                                <span>Mostrar em Homepage</span>
-                                <div class="form-check">
-                                    <input type="radio" class="form-check-input" id="simcheckdisplay"name="display" value="true">
-                                    <label class="form-check-label" for="simcheckdisplay">Sim</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="radio" class="form-check-input" id="naocheckdisplay"name="display" value="false">
-                                    <label class="form-check-label" for="naocheckdisplay">Não</label>
-                                </div>
-                            </div>
-                            <div class="input-group">
-                                <span>Projeto Ativo</span>
-                                <div class="form-check">
-                                    <input type="radio" class="form-check-input" id="simcheckativo" name="ativo" value="true">
-                                    <label class="form-check-label" for="simcheckativo">Sim</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="radio" class="form-check-input" id="naocheckativo" name="ativo" value="false">
-                                    <label class="form-check-label" for="naocheckativo">Não</label>
-                                </div>
-                            </div>
-                            <input type="submit" class="btn btn-outline-primary">
-                            
-                        </form>
-
-                    </div>
-                        
-            
-                    <div id="projetos-atuais">
-                        <div class="row">
-                            <% projetos.forEach(element=>{ %>
-                                <div class="col-3 my-2">
-                                    <a href="/admin/edit?id=<%=element.id%>">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <div class="card-title">
-                                                    <%= element.nome %>
-                                                </div>
-                                                <div class="card-subtitle">
-                                                    <%= element.endereco %>
-                                                </div>
-                                            </div>
+                                                onchange="this.form.submit()"
+                                                >
+                                                <label class="form-check-label" for="flexSwitchCheckChecked">Sim</label>
                                         </div>
-                    
-                    
-                    
-                                    </a>  
-
-                                </div>
-       
-                
-                            <% }) %>
-
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="administrador"
+                                                value="false" <% if(element.administrador==false){%>
+                                            checked
+                                            <%}%>
+                                                onchange="this.form.submit()"
+                                                >
+                                                <label class="form-check-label" for="flexSwitchCheckChecked">Não</label>
+                                        </div>
+                                    </div>
+        
+        
+                                </form>
+        
+                            </div>
+        
                         </div>
-
-            
                     </div>
-
-                <%}else{%>
-            
-                    <div class="col-6">
-                        Projetos em andamento
-            
-                    </div>
-                    <div class="col-6">
-                        Orçamentos em aberto
-            
-                    </div>
-            
-            
-                <%}%>
-
-
-
-
-            </div>
+                    <% }); %>
 
 
         </div>
 
+
+
+
+
+               
+
+        
+    </div>
+    <div id="home">
+        <%}else{%>
+
+            <div class="home">
+                <div class="row">
+                    <div class="col-8">
+                        <div class="text-center">
+                            <h5 class="h5">Projetos em andamento:</h3>
+
+                        </div>
+
+                        <table class="table table-striped">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th colspan="2">Projeto</th>
+                                    <th>Etapa Atual</th>
+                                    <th>Data de Entrega</th>
+                                    <th>Dias faltantes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="2">Item1</td>
+                                    <td>Item2asdasdasdasdasd</td>
+                                    <td>Item3</td>
+                                    <td>Item4</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Item1</td>
+                                    <td>Item2</td>
+                                    <td>Item3</td>
+                                    <td>Item4</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div class="col-3">
+                        <div class="text-center">
+                            <h5 class="h5">Orçamentos em aberto:</h5>
+                        </div>
+                        <table class="table table-striped">
+                            <colgroup>
+                                <col>
+                                <col>
+                            
+                            </colgroup>
+                            <thead class="thead-light">
+                                <th>Projeto</th>
+                                <th>Dias sem resposta</th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Item1</td>
+                                    <td>Iteasdasds2</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+
+            <%}%>
+
+        
     </div>
 
 </div>
 
-<%- include('partials/footer.ejs') %>
+<!--Fim da div row do admin header-->
+</div>
 
-<script>
-
-    $("#novoBtn").on("click",function(){
-        $("#novo-projeto").show();
-        $("#projetos-atuais").hide();
-    })
-
-    $("#atuaisBtn").on("click",function(){
-        $("#novo-projeto").hide();
-        $("#projetos-atuais").show();
-    })
-
-
-</script>
+    <%- include('partials/footer.ejs') %>

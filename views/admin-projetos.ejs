@@ -1,0 +1,92 @@
+<%- include ('partials/header.ejs') %>
+
+    <%- include ('partials/admin-header.ejs') %>
+
+        <div class="col-10" >
+            <div class="row container" id="div-buttom">
+                <div class="col">
+                    <button type="button" id="atuaisBtn" class="btn btn-outline-secondary col-12">Projetos Atuais</button>
+                </div>
+                <div class="col">
+                    <button type="button" id="novoBtn" class="btn btn-outline-secondary  col-12">Novo Projeto</button>
+                </div>
+            </div>
+            <div id="projetos-atuais">
+                <div class="row container">
+                    <%if(locals.projetos){%>
+                        <%projetos.forEach(element=>{%>
+                            <div class="col-3 my-2">
+                                <a href="/admin/edit?id=<%=element.id%>">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="card-title">
+                                                <%= element.nome %>
+                                            </div>
+                                            <div class="card-subtitle">
+                                                <%= element.endereco %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <% }) %>
+                            <%}else{%>
+                                <p>
+                                    Algum erro em renderizar projetos atuais.
+                                </p>
+                                <%}%>
+
+                </div>
+
+            </div>
+            <div id="novo-projeto" style="display: none;">
+                <div class="row container">
+                    <div class="form-group">
+                        <label for="orc-search">Orçamento:</label>
+                        <input class="form-control" type="text" list="orc-search">
+                        <datalist id="orc-search">
+                            <option value="item1"></option>
+                            <option value="item2"></option>
+                            <option value="item3"></option>
+                            <option value="item4"></option>
+                        </datalist>
+                    </div>
+                    <div class="form-group">
+                        <label for="client-search">Cliente:</label>
+                        <input class="form-control" type="text" list="client-search">
+                        <datalist id="client-search">
+                            <option value="item01"></option>
+                            <option value="item02"></option>
+                            <option value="item03"></option>
+                        </datalist>
+                    </div>
+                </div>
+            </div>
+            
+
+
+        </div>
+
+        <!-- Fim da div nova, abaixo teste e descarte-->
+
+
+
+        <!--Fechamento de div row do admin header-->
+        </div>
+
+        <%- include ('partials/footer.ejs') %>
+
+        <script>
+
+            $("#novoBtn").on("click", function () {
+                $("#novo-projeto").show();
+                $("#projetos-atuais").hide();
+            })
+
+            $("#atuaisBtn").on("click", function () {
+                $("#novo-projeto").hide();
+                $("#projetos-atuais").show();
+            })
+
+
+        </script>

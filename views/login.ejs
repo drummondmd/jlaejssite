@@ -1,46 +1,37 @@
 <%- include ('partials/header.ejs') %>
 
-<section>
-
-  <h2>
-    <% if (locals.mensagem) { %>
-      <p><%=mensagem%></p>
-<%    } %>
-  </h2>
-  <h2>
-    <% if (locals.failureMessage) { %>
-      <p>teste</p>
-<%    } %>
-  </h2>
-
-</section>
-
-<section>
-<!--Area de login-->
-
-<div class="container">
-    <form class="form-signin" action="/login" method="post">
-
-      
-        <div class="form-label-group">
-            <label for="inputEmail">Email</label>
-          <input type="email" id="inputEmail" class="form-control" placeholder="Email" required="" autofocus="" name="username">
+  <div class="container">
+    <div class="d-flex align-items-center justify-content-center" style="height: 80vh;">
+      <div class="row justify-content-center border rounded p-5">
+        <div class="col-3 d-flex align-items-center">
+          <div class="div">
+            <img src="/assets/img/logo.ico" alt="logo">
+          </div>
         </div>
-      
-        <div class="form-label-group">
-            <label for="inputPassword">Senha</label>
+        <div class="col-9">
+          <form class="form-signin" action="/login" method="post">
+            <div class="form-label-group">
+              <label for="inputEmail">Email</label>
+              <input type="email" id="inputEmail" class="form-control" placeholder="Email" required="" autofocus=""
+                name="username">
+            </div>
+            <div class="form-label-group">
+              <label for="inputPassword">Senha</label>
+              <input type="password" id="inputPassword" class="form-control" placeholder="Senha" required=""
+                name="password">
+            </div>
+            <div class="mt-2">
+              <button class="btn btn-primary col-12" type="submit">Entrar</button>
+            </div>
+            <div class="row mt-2">
+              <div class="col">Ainda não cadastrado: <a class="link" href="/register">Registre</a></div>
+              <div class="col text-center"><a href="/afazer">Esqueceu a senha?</a></div>
+            </div>
+          </form>
 
-          <input type="password" id="inputPassword" class="form-control" placeholder="Senha" required="" name="password">
         </div>
-      
-       
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-        <p>Não está cadastrado: <a href="/register">Registre</a></p>
-        <p class="mt-5 mb-3 text-muted text-center">© 2017-2019</p>
-      </form>
 
-</div>
-
-</section>
-
-<%- include ('partials/footer.ejs') %>
+      </div>
+    </div>
+  </div>
+  <%- include ('partials/footer.ejs') %>

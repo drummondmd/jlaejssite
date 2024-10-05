@@ -81,12 +81,13 @@ app.get("/admin/:route",async (req,res)=>{
     const endPoint = req.params.route;
     const user = await getDbUsers();
     const  projetos =  await getDbProject()
+    const actualUser = req.user
     switch(endPoint){
         case "usuarios":
-        res.render("admin.ejs",{user:user})
+        res.render("admin.ejs",{user:user,actualUser:actualUser})
         break;
         case "projetos": 
-        res.render("admin.ejs",{projetos:projetos})
+        res.render("admin-projetos.ejs",{projetos:projetos,actualUser:actualUser})
         break;
         case "edit":
         const id = req.query.id
@@ -97,9 +98,9 @@ app.get("/admin/:route",async (req,res)=>{
         res.render("edit.ejs",{projeto:projeto,users:users,documentos:array})
         break;
         case "orcamentos":
-        res.render("orcamento.ejs")
+        res.render("orcamento.ejs",{actualUser:actualUser})
         break;
-        case "home": res.render("admin.ejs")
+        case "home": res.render("admin.ejs",{actualUser:actualUser})
         break;
         default:
         res.redirect("/admin/home")
