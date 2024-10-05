@@ -352,9 +352,7 @@ app.get("/detalhes-de-projeto/:id",async (req,res)=>{
     
     ///basic functions
     app.get("/teste", async(req,res)=>{
-        let user = req.user
-        console.log(user)
-        res.render("admin.ejs")
+         res.render("teste.ejs")
 
     
     })
