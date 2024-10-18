@@ -87,6 +87,9 @@ app.get("/admin/:route",async (req,res)=>{
         res.render("admin.ejs",{user:user,actualUser:actualUser})
         break;
         case "projetos": 
+
+
+
         res.render("admin-projetos.ejs",{projetos:projetos,actualUser:actualUser})
         break;
         case "edit":
@@ -236,12 +239,15 @@ app.get("/detalhes-de-projeto/:id",async (req,res)=>{
 
     app.post("/projeto-novo",async(req,res)=>{
         const awnser = req.body
+        console.log(awnser)
+        /*
         try {
             await db.query("INSERT INTO projetos (nome,endereço,orcamento,finalidade,display,ativo,custo_obra) VALUES ($1,$2,$3,$4,$5,$6,$7)",[awnser.nome,awnser.endereco,awnser.orcamento,awnser.finalidade,awnser.display,awnser.ativo,awnser.custo_obra])            
         } catch (error) {
             res.send("Algum erro aconteceu na query")
             console.log("erro ao inserir query",error)
         }
+        */
         res.redirect("/admin/projetos")
 
     })

@@ -13,12 +13,13 @@
                     <button type="button" id="novoBtn" class="btn btn-outline-secondary  col-12">Novo Projeto</button>
                 </div>
             </div>
-            <div class="row justify-content-md-center">
+
+            <div class="row justify-content-md-center" id="novo-projeto">
                 <div class="col-md-10 mt-3">
-                    <div id="novo-projeto">
+                    <div>
                         <div class="row container" id="busca">
-                            <div class="form-group">
-                                <label for="orc-search">Selecionar orçamento:</label>
+                                <div class="form-group">
+                                <label for="orc-search">Selecionar orçamento atual:</label>
                                 <input class="form-control dl-search" type="text" list="orc-search-all">
                                 <datalist id="orc-search-all">
                                     <option value="item1"></option>
@@ -28,7 +29,7 @@
                                 </datalist>
                             </div>
                             <div class="form-group">
-                                <label for="client-search">Selecionar cliente:</label>
+                                <label for="client-search">Selecionar cliente atual:</label>
                                 <input class="form-control dl-search" type="text" list="client-search">
                                 <datalist id="client-search">
                                     <option value="item01"></option>
@@ -36,18 +37,21 @@
                                     <option value="item03"></option>
                                 </datalist>
                             </div>
-                            <div class=" mt-2 col text-center"><button class="btn novo-btn" type="button">Novo Cliente</button>
-                            </div>
-                            <div class="mt-2 col text-center"><button class="btn novo-btn" type="button">Novo Orçamento</button>
-                            </div>
+                            <div class="mt-2 col text-center"><button type="button" class="btn btn-outline-primary col-12">Adicionar Cliente e Projeto manualmente ou</button></div>
+                        
                         </div>
                         <div class="my-3">
                             <hr>
                         </div>
-                        <div id="detalhe-cliente" class="container" style="display: none;">
+
+                    <form action="/projeto-novo" method="post" style="display: none;">
+
+                        
+                        <div id="detalhe-cliente" class="container" >
                             <div class="row">
-                                <div class="form-group col-md-3">
+                                    <div class="form-group col-md-3">
                                     <label class="form-label" for="nome_cliente">Nome do cliente:</label>
+                                    <input type="text" name="id_cliente" hidden>
                                     <input class="form-control" name="nome_cliente" type="text" id="nome_cliente"
                                         placeholder="Nome do Cliente">
                                 </div>
@@ -86,7 +90,7 @@
                             </div>
                         </div>
 
-                        <div class="container" id="detalhe-projeto" style="display: none;">
+                        <div class="container" id="detalhe-projeto" >
                             <div class="form-group col-md-4"></div>
                             <label class="form-label" for="nome_projeto">Nome do Projeto</label>
                             <input type="text" name="nome_projeto" id="nome_projeto" placeholder="Nome do projeto"
@@ -104,7 +108,7 @@
                             <div class="row">
                                 <div class="form-group col-md-3">
                                     <label for="tipo">Tipo de Estabelecimento</label>
-                                    <select id="tipo" class="form-select mb-3">
+                                    <select name="tipo_estabelecimento" id="tipo" class="form-select mb-3">
                                         <option>...</option>
                                         <option value="residencial">Residencial</option>
                                         <option value="comercial">Comercial</option>
@@ -112,7 +116,7 @@
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="padrao">Padrão de construção:</label>
-                                    <select id="padrao" class="form-select mb-3">
+                                    <select name="padrao_estabelecimento" id="padrao" class="form-select mb-3">
                                         <option value="baixo">Baixo padrão</option>
                                         <option value="normal" selected>Normal</option>
                                         <option value="alto">Alto padrão</option>
@@ -122,68 +126,54 @@
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-3">
-                                    <label for="valor-orcamento">Valor do Orçamento</label>
-                                    <input type="number" class="form-control">
+                                    <label for="valor_orcamento">Valor do Orçamento</label>
+                                    <input name="valor_orcamento" id="valor_orcamento" type="number" class="form-control">
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label for="valor-orcamento">Valor estimado da Obra:</label>
-                                    <input type="number" class="form-control">
+                                    <label for="valor_est_obra">Valor estimado da Obra:</label>
+                                    <input type="number" name="valor_est_obra" id="valor_est_obra" class="form-control">
                                 </div>
                             </div>
                         </div>
 
                         <div class="container" id="etapas">
-                            <div class="row">
+                            <div class="row align-items-end">
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="etapas" class="form-label">Etapas:</label>
-                                        <input type="text" class="form-control" id="etapas">
+                                        <input type="number" class="form-control" id="etapasInput" min="1">
                                     </div>
                                 </div>
                                 <div class="col-md-2">
-                                    <button type="button">Acrescentar:</button>
+                                    <button type="button" class="btn btn-outline-primary" id="etapaBtn">Acrescentar:</button>
                                 </div>
-                                <div class="col-md-2">
-                                    <button type="reset">Refazer</button>
-                                </div>
+
                             </div>
-                            <div class="row">
-                                <div class="col-md-4 form-group">
-                                    <label class="form-label" for="">Etapa</label>
-                                    <input class="form-control" type="text" name="" id="">
-                                </div>
-                                <div class="col-md-2">
-                                    <label for="" class="form-label">Prazo</label>
-                                    <input type="number" class="form-control">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4 form-group">
-                                    <label class="form-label" for="">Etapa</label>
-                                    <input class="form-control" type="text" name="" id="">
-                                </div>
-                                <div class="col-md-2">
-                                    <label for="" class="form-label">Prazo</label>
-                                    <input type="number" class="form-control">
-                                </div>
+                         
+
+                            <div class="row" id="etapasContainer">
+                                <!--Aqui será inserido as etapas após clique do botão-->
+
                             </div>
 
                         </div>
                         <div id="hidden">
-                            <input type="date">
+                            <input type="text" id="datePicker" name="data_orcamento" hidden>
                         </div>
+                        <div class="m-4">
+                            <input class="btn btn-outline-primary col-10" type="submit" value="Enviar" style="display: none;">
+                        </div>
+                    </form>
+
+
+
 
                     </div>
 
                 </div>
             </div>
 
-
-
-
-
-
-            <div id="projetos-atuais" style="display: none;">
+            <div id="projetos-atuais" style="display: none;" >
                 <div class="row container">
                     <%if(locals.projetos){%>
                         <%projetos.forEach(element=>{%>
@@ -241,21 +231,49 @@
                     $("#projetos-atuais").show();
                 })
 
-                $(".dl-search").change(function(){
-                    let val = this.value  
-                    console.log(val)
-                    //validar dados posteriormente
-                    //preencher dados automaticamente
-                    $("#detalhe-cliente").show()
-                    $("#detalhe-projeto").show()
-                    
-                })
+                $("#busca button").on("click", function () {
+                    $("form").show()
+                    })
                 
                 $(".novo-btn").on("click",function(){
                     let val =this.text
                     console.log(val)
                 })
                 
+                $("#etapaBtn").on("click",function(){
+                    let val = $('#etapasInput').val();
+                    if(val<1){
+                        alert("Erro ao inserir Etapas")
+                    }else{
+                        let html = []
+                        for(let i=0; i<val;i++){
+                            html.push(
+                                `
+                                <div class="row">
+                                <div class="col-md-4 form-group">
+                                    <label class="form-label" for="">Nome da Etapa:</label>
+                                    <input class="form-control" type="text" name="etapa${i}" id="">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="" class="form-label">Prazo, em dias uteis:</label>
+                                    <input type="number" class="form-control" name="prazo_etapa${i}">
+                                </div>
+                                </div>
+
+                                `
+                            )
+
+                        }
+                        $("#etapasContainer").html(html);
+                        $("#etapaBtn").off();
+                        $('#datePicker').val(new Date().toJSON().slice(0, 10));
+                        $("input:submit").show()
+
+                    }
+
+
+                  
+                })
 
 
 
