@@ -21,7 +21,7 @@ app.use(
         cookie:{
             maxAge: 1000*60*60*24
         }
-        
+
     })
 );
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -54,7 +54,7 @@ app.get("/login", (req, res) => {
             res.redirect("/clientes")
             break;
         }
-        
+
     }else{
         res.render("login.ejs");
     }
@@ -86,7 +86,7 @@ app.get("/admin/:route",async (req,res)=>{
         case "usuarios":
         res.render("admin.ejs",{user:user,actualUser:actualUser})
         break;
-        case "projetos": 
+        case "projetos":
 
 
 
@@ -113,16 +113,16 @@ app.get("/admin/:route",async (req,res)=>{
 
 app.get("/clientes",async (req,res)=>{
     const user = req.user
-   
+
     if (user == undefined) {
         res.redirect("/login")
-        
+
     } else {
         const userId = req.user.id
         const projetos = await getProjectFromClient (userId)
         res.render("cliente.ejs",{user:user,projetos:projetos})
     }
-    
+
 })
 
 app.get("/detalhes-de-projeto/:id",async (req,res)=>{
@@ -132,7 +132,7 @@ app.get("/detalhes-de-projeto/:id",async (req,res)=>{
         res.redirect("/clientes")
     } else {
         const checkRightUser = await getRelationships(user.id,projectId)
-  
+
         if (checkRightUser == true) {
             const result = await getDbProject (projectId)
             const projeto = result[0]
@@ -142,17 +142,17 @@ app.get("/detalhes-de-projeto/:id",async (req,res)=>{
             const documentos = array.arrayDocumentos.map((element)=>element.link)
             const arquivos = array.arrayArquivos.map((element)=>element.link)
             res.render("detalhado.ejs",{user:user,projeto:projeto,imagens:imagens,documentos:documentos,spreadsheet:spreadsheet,arquivos:arquivos})
-            
+
         } else {
             res.redirect("/clientes")
-            
+
         }
-        
-        
+
+
     }
 
 
-   
+
 
 })
 
@@ -171,13 +171,13 @@ app.get("/detalhes-de-projeto/:id",async (req,res)=>{
     passport.authenticate("local", {
         failureRedirect: "/login",
         successRedirect:"/redirect",
-        failureMessage:true 
-    })) 
+        failureMessage:true
+    }))
 
     app.post("/register",async (req,res)=> {
         const dn = new Date(req.body.dn)
         console.log(req.body,dn)
-        
+
         try {
             const result = await getDbUsers(req.body.email);
             if (result.length > 0) {
@@ -195,25 +195,25 @@ app.get("/detalhes-de-projeto/:id",async (req,res)=>{
                         console.log("query succefull")
                         res.render("login.ejs",{mensagem:"Usuario registrado com sucesso, faça login"})
                     }
-                    
+
                 })
-                
-            }        
-            
+
+            }
+
         } catch (error) {
             console.log(error)
             res.send("Algum erro aconteceu")
-            
+
         }
-        
-        
+
+
     });
-    
+
     app.post("/updateUser/:id",async (req,res,)=>{
         const id = req.params.id
         await queryUpdate("admninistrador",req.body.administrador,id)
         await queryUpdate("verificado",req.body.verificado,id)
-        
+
         async function queryUpdate (coluna, valor,id){
             try {
                 switch (coluna) {
@@ -227,14 +227,14 @@ app.get("/detalhes-de-projeto/:id",async (req,res)=>{
                     console.log("algo de errado na função queryUpdate")
                     break;
                 }
-                
+
             } catch (error) {
-                console.log("Algum erro aconteceu na query",error)        
+                console.log("Algum erro aconteceu na query",error)
             }
         }
-        
-        res.redirect("/admin/usuarios");  
-        
+
+        res.redirect("/admin/usuarios");
+
     });
 
     app.post("/projeto-novo",async(req,res)=>{
@@ -242,7 +242,7 @@ app.get("/detalhes-de-projeto/:id",async (req,res)=>{
         console.log(awnser)
         /*
         try {
-            await db.query("INSERT INTO projetos (nome,endereço,orcamento,finalidade,display,ativo,custo_obra) VALUES ($1,$2,$3,$4,$5,$6,$7)",[awnser.nome,awnser.endereco,awnser.orcamento,awnser.finalidade,awnser.display,awnser.ativo,awnser.custo_obra])            
+            await db.query("INSERT INTO projetos (nome,endereço,orcamento,finalidade,display,ativo,custo_obra) VALUES ($1,$2,$3,$4,$5,$6,$7)",[awnser.nome,awnser.endereco,awnser.orcamento,awnser.finalidade,awnser.display,awnser.ativo,awnser.custo_obra])
         } catch (error) {
             res.send("Algum erro aconteceu na query")
             console.log("erro ao inserir query",error)
@@ -256,7 +256,7 @@ app.get("/detalhes-de-projeto/:id",async (req,res)=>{
         const awnser = req.body
         console.log(awnser)
         try {
-            await db.query("UPDATE projetos SET nome = $1,endereco =$2,orcamento=$3,finalidade=$4,display=$5,ativo=$6,custo_obra=$7 WHERE id = $8",[awnser.nome,awnser.endereco,awnser.orcamento,awnser.finalidade,awnser.display,awnser.ativo,awnser.custo_obra,awnser.id])            
+            await db.query("UPDATE projetos SET nome = $1,endereco =$2,orcamento=$3,finalidade=$4,display=$5,ativo=$6,custo_obra=$7 WHERE id = $8",[awnser.nome,awnser.endereco,awnser.orcamento,awnser.finalidade,awnser.display,awnser.ativo,awnser.custo_obra,awnser.id])
         } catch (error) {
             res.send("Algum erro aconteceu na query")
             console.log("erro ao inserir query",error)
@@ -265,19 +265,19 @@ app.get("/detalhes-de-projeto/:id",async (req,res)=>{
         res.redirect("/admin/projetos")
 
     })
-    
+
     app.post("/link-add",async (req,res)=>{
         const awnser = req.body;
         const id =parseInt(req.body.id);
         awnser.nomelink.forEach((element,index) => {
             try {
                 db.query("INSERT INTO documentos (project_id,link,type,nome,obs) VALUES ($1,$2,$3,$4,$5)",[id,awnser.link[index],awnser.type[index],element,awnser.obslink[index]?awnser.obslink[index]:null])
-                
+
             } catch (error) {
                 console.log(error,"erro ao adicionar link na db")
                 res.send("Algum erro aconteceu, contate suporte")
-                
-            }            
+
+            }
         });
         res.redirect("/admin/home")
     })
@@ -301,18 +301,27 @@ app.get("/detalhes-de-projeto/:id",async (req,res)=>{
 
     ///post request orçamento
 
-    app.post("/novo-orcamento",async(req,res)=>{
+    app.get("/novo-orcamento",async(req,res)=>{
+        try {
+            const result = await db.query("SELECT * FROM orcamentos")
+        } catch (error) {
+            console.log("erro")
+        }
+
+
         console.log(req.body)
         let resumo = req.body
+        let array = Object.keys(resumo)
+        console.log(array)
         // Fazer query depois
         res.render("resumo-orcamento.ejs",{resumo:resumo})
-    
+
 
     })
-    
-    
+
+
     //autentication
-    
+
     //local
     passport.use(
         "local",
@@ -324,47 +333,47 @@ app.get("/detalhes-de-projeto/:id",async (req,res)=>{
                 bcrypt.compare(password,storedHashedPassword,(err,valid)=>{
                     if (err) {
                         console.log("Erro ao comparar senhas",err);
-                        return cb(err,{mensagem:"usuario ou senha incorretas"});                   
+                        return cb(err,{mensagem:"usuario ou senha incorretas"});
                     } else {
                         if (valid) {
                             return cb(null,user);
                         } else {
                             return cb (null,false)
-                            
-                        }                   
+
+                        }
                     }
                 })
-                
+
             } else {
                 console.log("Usuario não cadastrado")
                 return cb(null,false,{mensagem:"Usuario ou senha incorreta"})
             }
-            
-            
+
+
         })
-        
+
     )
-    
-    
+
+
     //serialize e deserialize
     passport.serializeUser((user, cb) => {
         cb(null, user);
     });
-    
+
     passport.deserializeUser((user, cb) => {
         cb(null, user);
     });
-    
-    
+
+
     ///basic functions
     app.get("/teste", async(req,res)=>{
          res.render("teste.ejs")
 
-    
+
     })
-    
+
     // Basic functions
-    
+
     async function getDbUsers(name){
         if (name == undefined) {
             const result = await db.query("SELECT * FROM usuarios")
@@ -374,7 +383,7 @@ app.get("/detalhes-de-projeto/:id",async (req,res)=>{
             return result.rows
         }
     }
-    
+
     async function getDbProject(name){
         if (name == undefined) {
             const result = await db.query("SELECT * FROM projetos")
@@ -399,7 +408,7 @@ app.get("/detalhes-de-projeto/:id",async (req,res)=>{
         return result.rows
 
     }
-    
+
     async function getDocuments (projectID){
         try {
             const result = await db.query("SELECT * from documentos WHERE project_id = $1",[projectID])
@@ -415,20 +424,19 @@ app.get("/detalhes-de-projeto/:id",async (req,res)=>{
                 arraySpreadsheet: spreadsheet,
                 arrayArquivos: arquivos
             }
-            
+
         } catch (error) {
             console.log("Erro na query" + error)
         }
-        
+
 
     }
 
-    
-    
+
+
     /// listen
     app.listen(port,()=>{
         console.log(`Servidor funcionando na porta ${port}`)
     })
-    
-    
-    
+
+
