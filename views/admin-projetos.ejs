@@ -38,7 +38,7 @@
                                 </datalist>
                             </div>
                             <div class="mt-2 col text-center"><button type="button" class="btn btn-outline-primary col-12">Adicionar Cliente e Projeto manualmente ou</button></div>
-                        
+
                         </div>
                         <div class="my-3">
                             <hr>
@@ -46,7 +46,7 @@
 
                     <form action="/projeto-novo" method="post" style="display: none;">
 
-                        
+
                         <div id="detalhe-cliente" class="container" >
                             <div class="row">
                                     <div class="form-group col-md-3">
@@ -149,7 +149,7 @@
                                 </div>
 
                             </div>
-                         
+
 
                             <div class="row" id="etapasContainer">
                                 <!--Aqui será inserido as etapas após clique do botão-->
@@ -158,7 +158,7 @@
 
                         </div>
                         <div id="hidden">
-                            <input type="text" id="datePicker" name="data_orcamento" hidden>
+                            <input type="text" id="datePicker" name="data_projeto" hidden>
                         </div>
                         <div class="m-4">
                             <input class="btn btn-outline-primary col-10" type="submit" value="Enviar" style="display: none;">
@@ -234,12 +234,12 @@
                 $("#busca button").on("click", function () {
                     $("form").show()
                     })
-                
+
                 $(".novo-btn").on("click",function(){
                     let val =this.text
                     console.log(val)
                 })
-                
+
                 $("#etapaBtn").on("click",function(){
                     let val = $('#etapasInput').val();
                     if(val<1){
@@ -272,7 +272,7 @@
                     }
 
 
-                  
+
                 })
 
 

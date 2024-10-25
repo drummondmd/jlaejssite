@@ -1,185 +1,251 @@
 <%- include ('partials/header.ejs') %>
 
-<%- include ('partials/admin-header.ejs') %>
+    <%- include ('partials/admin-header.ejs') %>
 
-<div class="col-10">
-    <div class="container mt-2">
-        <h2 class="h2 pl-5">Painel de orçamento</h2>
-
-    </div>
-    <div class="container">
-        <form action="/novo-orcamento" method="post">
-
-
-
-            <div id="orc-pag-1" clas="container-fluid">
-                <div class="row">
-                    <div class="form-group col-md-3">
-                        <label class="form-label" for="nome_cliente">Nome do cliente:</label>
-                        <input class="form-control" name="nome_cliente" type="text" id="nome_cliente"
-                            placeholder="Nome do Cliente" >
-                    </div>
-                    <div class="form-group col-md-5">
-                        <label class="form-label" for="sobrenome_cliente">Sobrenome</label>
-                        <input class="form-control" name="sobrenome_cliente" type="text" id="nome_cliente"
-                            placeholder="Sobrenome" >
-                    </div>
+        <div class="col-10">
+            <div class="row container" id="div-buttom">
+                <div class="col">
+                    <button type="button" id="atuaisBtn" class="btn btn-outline-secondary col-12">Orçamentos
+                        Atuais</button>
                 </div>
-                <div class="row">
-                    <div class="form-group col-md-3">
-                        <label class="form-label" for="dn">Data de Nascimento:</label>
-                        <input class="form-control" name="dn" id="dn" type="date" class="" >
-                    </div>
-
-                    <div class="form-group col-md-3">
-                        <label class="form-label" for="sexo">Sexo:</label>
-                        <select name="sexo" id="sexo" class="form-select" >
-                            <option value="Selecione" disabled selected>Selecione</option>
-                            <option value="Masculino">Masculino</option>
-                            <option value="Feminino">Feminino</option>
-                        </select>
-                    </div>
+                <div class="col">
+                    <button type="button" id="novoBtn" class="btn btn-outline-secondary  col-12">Novo Orçamento</button>
                 </div>
-                <div class="row">
-                    <div class="form-group col-md-4">
-                        <label class="form-label" for="email">Email:</label>
-                        <input type="email" class="form-control" name="email" id="email" placeholder="email">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label" for="tel">Telefone:</label>
-                        <input type="tel" class="form-control" name="tel" id="tel" placeholder="Numero de Telefone">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-8 m-4">
-                        <hr>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-md-4">
-                        <label class="form-label" for="nome_projeto">Nome do Projeto</label>
-                        <input type="text" name="nome_projeto" id="nome_projeto" placeholder="Nome do projeto"
-                            class="form-control mb-3" >
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label class="form-label" for="cidade">Cidade</label>
-                        <input type="text" class="form-control" name="cidade" id="" placeholder="Cidade" >
-                    </div>
-                    <div class="form-group col-md-8">
-                        <label class="form-label" for="endereco">Endereço:</label>
-                        <input type="text" class="form-control" name="endereco" id="endereco" placeholder="Endereço"
-                            >
-                    </div>
-                    <div class="row">
-                        <div class="col-md-8 m-4">
-                            <hr>
-                        </div>
-
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-md-3">
-                            <label for="tipo">Tipo de Estabelecimento</label>
-                            <select id="tipo" class="form-select mb-3">
-                                <option>...</option>
-                                <option value="residencial">Residencial</option>
-                                <option value="comercial">Comercial</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label for="padrao">Padrão de construção:</label>
-                            <select id="padrao" class="form-select mb-3">
-                                <option value="baixo">Baixo padrão</option>
-                                <option value="normal" selected>Normal</option>
-                                <option value="alto">Alto padrão</option>
-                            </select>
-                        </div>
-                    </div>
-                    <p>Grau de Complexidade do projeto:</p>
-                    <div class="row mt-4">
-                        <div class="form-group col-md-2">
-                            <label for="porte-projeto">Porte do Projeto:</label>
-                            <select name="" id="porte-projeto" class="comp-projeto form-select">
-                                <option value="0.7">Baixo</option>
-                                <option value="1" selected>Normal</option>
-                                <option value="1.3">Alto</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label for="escopo-projeto">Indefinição de Escopo</label>
-                            <select name="" id="escopo-projeto" class="comp-projeto form-select">
-                                <option value="0.7">Baixo</option>
-                                <option value="1" selected>Normal</option>
-                                <option value="1.3">Alto</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label for="prazo-projeto">Indefinição de Prazo</label>
-                            <select name="" id="prazo-projeto" class="comp-projeto form-select">
-                                <option value="0.7">Baixo</option>
-                                <option value="1" selected>Normal</option>
-                                <option value="1.3">Alto</option>
-                            </select>
-                        </div>
-                        <div class="row mt-2 align-items-end">
-                            <div class="form-group col-md-2">
-                                <label for="grau-custo-projeto">Controle de custo</label>
-                                <select name="" id="grau-custo-projeto" class="comp-projeto form-select">
-                                    <option value="0.7">Baixo</option>
-                                    <option value="1" selected>Normal</option>
-                                    <option value="1.3">Alto</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-2">
-                                <label for="grau-intervencao-projeto">Intervenção do Cliente:</label>
-                                <select name="" id="grau-custo-projeto" class="comp-projeto form-select">
-                                    <option value="0.7">Baixo</option>
-                                    <option value="1" selected>Normal</option>
-                                    <option value="1.3">Alto</option>
-                                </select>
-                            </div>
-
-
-
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-8 m-4">
-                            <hr>
-                        </div>
-                    </div>
-                    <div class="row align-items-end">
-                        <div class="form-group col-md-4">
-                            <label class="form-label" for="number">Ambientes:</label>
-                            <input class="form-control" type="number" placeholder="Colocar número de ambientes" id="amb"
-                                min="1" max="999">
-                        </div>
-                        <div class="col-md-2">
-                            <button type="button" class="btn btn-outline-primary col-12" id="incl-amb">Incluir</button>
-                        </div>
-                        <div class="col-md-2">
-                            <a href="/admin/home">
-                                <button type="button" class="btn btn-outline-secondary col-12" id="incl-amb">Voltar a Home</button>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-8 m-4">
-                        <hr>
-                    </div>
-
-                </div>
-                <!--Fim da primeira página-->
-                <!-- Fim da div pagina 1-->
             </div>
 
-            <div id="orc-pag-2" clas="container-fluid" style="display: none;">
 
-                <div id="amb-incluido">
-                    <h2 class="h3">Ambientes:</h2>
-                    <div class="row">
-                        <!--Col serão colocadas pelo Jquery, comentado modelo abaixo-->
-                        <!-- <div class="col-md-5 mt-2">
+
+            <div class="col" id="orcamentos-atuais">
+                <div class="row container">
+                    <%if(locals.orcamentos){%>
+                        <%orcamentos.forEach(element=>{%>
+                            <div class="col-3 my-2">
+
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="card-title">
+                                            <%= element.nome_cliente %>
+                                        </div>
+                                        <div class="card-subtitle">
+                                            <%= element.nome_projeto %>
+                                        </div>
+                                        <div class="card-subtitle">
+                                            <%= element.endereco %>
+                                        </div>
+                                        <div>
+                                            <form action="/editar-orcamento/<%=element.id%>" method="post">
+                                                <div class="form-group">
+                                                    <label for="status">Status:</label>
+                                                    <select name="status" id="status" class="form-select" onchange="this.form.submit()">
+                                                        <option value="Em aberto">Em aberto</option>
+                                                        <option value="Fechado">Fechado</option>
+                                                        <option value="Descartado">Descartado</option>
+                                                    </select>
+                                                </div>
+
+
+
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <% }) %>
+                                <%}else{%>
+                                    <p>
+                                        Algum erro em renderizar projetos atuais.
+                                    </p>
+                                    <%}%>
+
+                </div>
+
+            </div>
+
+
+            <div class="col" id="novo-orcamento" style="display: none;">
+                <div class="container mt-2">
+                    <h2 class="h2 pl-5">Painel de orçamento</h2>
+
+                </div>
+                <div class="container">
+                    <form action="/novo-orcamento" method="post">
+
+
+
+                        <div id="orc-pag-1" clas="container-fluid">
+                            <div class="row">
+                                <div class="form-group col-md-3">
+                                    <label class="form-label" for="nome_cliente">Nome do cliente:</label>
+                                    <input class="form-control" name="nome_cliente" type="text" id="nome_cliente"
+                                        placeholder="Nome do Cliente">
+                                </div>
+                                <div class="form-group col-md-5">
+                                    <label class="form-label" for="sobrenome_cliente">Sobrenome</label>
+                                    <input class="form-control" name="sobrenome_cliente" type="text" id="nome_cliente"
+                                        placeholder="Sobrenome">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-3">
+                                    <label class="form-label" for="dn">Data de Nascimento:</label>
+                                    <input class="form-control" name="dn" id="dn" type="date" class="">
+                                </div>
+
+                                <div class="form-group col-md-3">
+                                    <label class="form-label" for="sexo">Sexo:</label>
+                                    <select name="sexo" id="sexo" class="form-select">
+                                        <option value="Selecione" disabled selected>Selecione</option>
+                                        <option value="Masculino">Masculino</option>
+                                        <option value="Feminino">Feminino</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label class="form-label" for="email">Email:</label>
+                                    <input type="email" class="form-control" name="email" id="email"
+                                        placeholder="email">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label" for="tel">Telefone:</label>
+                                    <input type="tel" class="form-control" name="tel" id="tel"
+                                        placeholder="Numero de Telefone">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8 m-4">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label class="form-label" for="nome_projeto">Nome do Projeto</label>
+                                    <input type="text" name="nome_projeto" id="nome_projeto"
+                                        placeholder="Nome do projeto" class="form-control mb-3">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label class="form-label" for="cidade">Cidade</label>
+                                    <input type="text" class="form-control" name="cidade" id="" placeholder="Cidade">
+                                </div>
+                                <div class="form-group col-md-8">
+                                    <label class="form-label" for="endereco">Endereço:</label>
+                                    <input type="text" class="form-control" name="endereco" id="endereco"
+                                        placeholder="Endereço">
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-8 m-4">
+                                        <hr>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-3">
+                                        <label for="tipo">Tipo de Estabelecimento</label>
+                                        <select id="tipo" class="form-select mb-3">
+                                            <option>...</option>
+                                            <option value="residencial">Residencial</option>
+                                            <option value="comercial">Comercial</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="padrao">Padrão de construção:</label>
+                                        <select id="padrao" class="form-select mb-3">
+                                            <option value="baixo">Baixo padrão</option>
+                                            <option value="normal" selected>Normal</option>
+                                            <option value="alto">Alto padrão</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <p>Grau de Complexidade do projeto:</p>
+                                <div class="row mt-4">
+                                    <div class="form-group col-md-2">
+                                        <label for="porte-projeto">Porte do Projeto:</label>
+                                        <select name="" id="porte-projeto" class="comp-projeto form-select">
+                                            <option value="0.7">Baixo</option>
+                                            <option value="1" selected>Normal</option>
+                                            <option value="1.3">Alto</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <label for="escopo-projeto">Indefinição de Escopo</label>
+                                        <select name="" id="escopo-projeto" class="comp-projeto form-select">
+                                            <option value="0.7">Baixo</option>
+                                            <option value="1" selected>Normal</option>
+                                            <option value="1.3">Alto</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <label for="prazo-projeto">Indefinição de Prazo</label>
+                                        <select name="" id="prazo-projeto" class="comp-projeto form-select">
+                                            <option value="0.7">Baixo</option>
+                                            <option value="1" selected>Normal</option>
+                                            <option value="1.3">Alto</option>
+                                        </select>
+                                    </div>
+                                    <div class="row mt-2 align-items-end">
+                                        <div class="form-group col-md-2">
+                                            <label for="grau-custo-projeto">Controle de custo</label>
+                                            <select name="" id="grau-custo-projeto" class="comp-projeto form-select">
+                                                <option value="0.7">Baixo</option>
+                                                <option value="1" selected>Normal</option>
+                                                <option value="1.3">Alto</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <label for="grau-intervencao-projeto">Intervenção do Cliente:</label>
+                                            <select name="" id="grau-custo-projeto" class="comp-projeto form-select">
+                                                <option value="0.7">Baixo</option>
+                                                <option value="1" selected>Normal</option>
+                                                <option value="1.3">Alto</option>
+                                            </select>
+                                        </div>
+
+
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-8 m-4">
+                                        <hr>
+                                    </div>
+                                </div>
+                                <div class="row align-items-end">
+                                    <div class="form-group col-md-4">
+                                        <label class="form-label" for="number">Ambientes:</label>
+                                        <input class="form-control" type="number"
+                                            placeholder="Colocar número de ambientes" id="amb" min="1" max="999">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-outline-primary col-12"
+                                            id="incl-amb">Incluir</button>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <a href="/admin/home">
+                                            <button type="button" class="btn btn-outline-secondary col-12"
+                                                id="incl-amb">Voltar a Home</button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8 m-4">
+                                    <hr>
+                                </div>
+
+                            </div>
+                            <!--Fim da primeira página-->
+                            <!-- Fim da div pagina 1-->
+                        </div>
+
+                        <div id="orc-pag-2" clas="container-fluid" style="display: none;">
+
+                            <div id="amb-incluido">
+                                <h2 class="h3">Ambientes:</h2>
+                                <div class="row">
+                                    <!--Col serão colocadas pelo Jquery, comentado modelo abaixo-->
+                                    <!-- <div class="col-md-5 mt-2">
                             <label class="form-label" for="Ambiente-${i + 1}">Nome do ambiente:</label>
                             <input class="form-control" type="text" class="amb-nome" value="Ambiente-${i + 1}"
                                 id="Ambiente-${i + 1}" style="background-color:#FAFAD2;">
@@ -212,107 +278,122 @@
 
                         </div> -->
 
-                        <!--Col serão colocadas pelo Jquery-->
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-10 m-4">
-                        <hr>
-                    </div>
-                </div>
-                <div class="mb-4">
-                    <button type="button" class="btn btn-outline-primary col-5" id="calc">Calcular Orçamento</button>
-                    <button type="button" class="btn btn-outline-secondary col-5 refresh">Refazer Orçamento</button>
-                </div>
-            </div>
+                                    <!--Col serão colocadas pelo Jquery-->
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-10 m-4">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <button type="button" class="btn btn-outline-primary col-5" id="calc">Calcular
+                                    Orçamento</button>
+                                <button type="button" class="btn btn-outline-secondary col-5 refresh">Refazer
+                                    Orçamento</button>
+                            </div>
+                        </div>
 
-            <div id="orc-pag-3" clas="container-fluid" style="display: none;">
-                <div class="row">
-                    <div class="col-md-4">
-                        <p class="h4">Preço Final:</p>
-                        <div id="result_soma"></div>
-                        <!-- <p>R$ 100,00</p> -->
-                        <!-- Onde deve aparecer -->
-                    </div>
-                    <div class="col-md-8">
-                        <div class="row" id="result">
-                            <p class="h4">Ambientes:</p>
-                            <!-- Onde deve aparecer, abaixo modelo -->
+                        <div id="orc-pag-3" clas="container-fluid" style="display: none;">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <p class="h4">Preço Final:</p>
+                                    <div id="result_soma"></div>
+                                    <!-- <p>R$ 100,00</p> -->
+                                    <!-- Onde deve aparecer -->
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="row" id="result">
+                                        <p class="h4">Ambientes:</p>
+                                        <!-- Onde deve aparecer, abaixo modelo -->
 
-                            <!-- <div class="col-md-4">
+                                        <!-- <div class="col-md-4">
                                 <div class="card">
                                     <div class="card-header">${elem.nome}</div>
                                     <div class="card-subtitle m-2 text-muted">${elem.metro}m²</div>
                                     <div class="card-text">${elem.preco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</div>
-        
+
                                 </div>
 
                             </div> -->
 
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+                            <!--Input ocultos-->
+
+                            <div id="form-result"></div>
+                            <div class="row">
+                                <div class="col-md-4 my-4">
+                                    <button id="calc2" type="submit" class="btn btn-outline-primary col-12">Confirmar e
+                                        Enviar
+                                        orçamento</button>
+                                </div>
+                                <div class="col-md-4 my-4">
+                                    <button type="button" class="btn btn-outline-secondary col-12 refresh">Refazer
+                                        Orçamento</button>
+
+                                </div>
+
+                            </div>
+
                         </div>
-
-
-                    </div>
-
                 </div>
-                <!--Input ocultos-->
-
-                <div id="form-result"></div>
-                <div class="row">
-                    <div class="col-md-4 my-4">
-                        <button id="calc2" type="submit" class="btn btn-outline-primary col-12">Confirmar e Enviar
-                            orçamento</button>
-                    </div>
-                    <div class="col-md-4 my-4">
-                        <button type="button" class="btn btn-outline-secondary col-12 refresh">Refazer
-                            Orçamento</button>
-
-                    </div>
-
-                </div>
+                </form>
 
             </div>
-    </div>
-    </form>
 
-</div>
+        </div>
 
 
-<!--Fim da div row do admin header-->
-</div>
+        <!--Fim da div row do admin header-->
+        </div>
 
 
 
 
-    <%- include ('partials/footer.ejs') %>
+        <%- include ('partials/footer.ejs') %>
 
-        <script>
+            <script>
 
-            $(".refresh").on("click", function () {
-                event.preventDefault();
-                location.replace(location.pathname);
-            })
+                $("#novoBtn").on("click", function () {
+                    $("#novo-orcamento").show();
+                    $("#orcamentos-atuais").hide();
+                })
 
+                $("#atuaisBtn").on("click", function () {
+                    $("#novo-orcamento").hide();
+                    $("#orcamentos-atuais").show();
+                })
 
-            $("#incl-amb").on("click", function () {
-                let qnt = $("#amb").val()
-                let tipo =$("#tipo").val()
-                if (qnt == 0 | null) {
-                    alert("Incluir ambiente")
-                    $("#amb").focus()
-                } else if(tipo === "..."){
-                    alert("Selecione Tipo de Empreendimento")
-                    $("#tipo").focus()
-                }else {
+                $(".refresh").on("click", function () {
                     event.preventDefault();
-                    $("#orc-pag-1").hide();
-                    $("#orc-pag-2").show();
+                    location.replace(location.pathname);
+                })
 
-                    let html = []
 
-                    for (let i = 0; i < qnt; i++) {
-                        html.push
-                            (`
+                $("#incl-amb").on("click", function () {
+                    let qnt = $("#amb").val()
+                    let tipo = $("#tipo").val()
+                    if (qnt == 0 | null) {
+                        alert("Incluir ambiente")
+                        $("#amb").focus()
+                    } else if (tipo === "...") {
+                        alert("Selecione Tipo de Empreendimento")
+                        $("#tipo").focus()
+                    } else {
+                        event.preventDefault();
+                        $("#orc-pag-1").hide();
+                        $("#orc-pag-2").show();
+
+                        let html = []
+
+                        for (let i = 0; i < qnt; i++) {
+                            html.push
+                                (`
                     <div class="col-md-5 mt-2">
                             <label class="form-label" for="Ambiente-${i + 1}">Nome do ambiente:</label>
                             <input class="form-control amb-nome" type="text" value="Ambiente-${i + 1}"
@@ -348,198 +429,198 @@
 
                         `)
 
-                    }
-                    $("#amb-incluido > .row").append(html)
-                }
-            })
-
-
-            $("#calc").on("click", function () {
-                event.preventDefault();
-                let validationArray = $(".amb-m2").toArray().map((elem, index) => elem.value)
-                let check = validationArray.some(elem => elem == 0)
-                if (check === true) {
-                    alert("Preencha a metragem")
-                } else {
-                                    //tab pages
-                $("#orc-pag-2").hide();
-                $("#orc-pag-3").show();
-
- 
-                let tipo = $("#tipo").val()
-                let padrao = $("#padrao").val()
-
-                //bh
-                let bh = cubFunction(tipo, padrao);
-
-                //complexidade projeeto
-                let compProjetoArray = $(".comp-projeto option:selected").toArray().map(elem => + elem.value)
-                let soma = 0
-                for (let i = 0; i < compProjetoArray.length; i++) {
-                    soma += compProjetoArray[i]
-                }
-                let compProjeto = soma / 5
-
-                ///ambientes
-
-                let ambientesArray = $(".amb-nome").toArray().map((elem, index) => elem.value)
-                let ambientesObj = []
-
-                ambientesArray.forEach((elem, index) => {
-                    ambientesObj.push(
-                        {
-                            nome: elem,
-                            metro: +$(".amb-m2").toArray()[index].value,
-                            detalhamento: + $(".comp-amb-det").toArray()[index].value,
-                            aprovacao: +$(".comp-amb-aprov").toArray()[index].value,
-
                         }
-                    )
-
+                        $("#amb-incluido > .row").append(html)
+                    }
                 })
 
-                /// acrescentando fp,preco a cada ambiente
 
-                ambientesObj.forEach((elem, index) => {
-                    let soma1 = (elem.detalhamento + elem.aprovacao) / 2;
-                    let soma2 = (soma1 + compProjeto) / 2;
-                    elem.complexidade = soma1;
-                    elem.complexidadeCombinada = soma2;
-                    let fp = fpFunction(soma2);
-                    elem.preco = bh * elem.metro * fp
-                })
-
-                ///printando resultado e somando valores de ambiente.
-                ///somando preço de ambientes
-                let somaPreco = 0
+                $("#calc").on("click", function () {
+                    event.preventDefault();
+                    let validationArray = $(".amb-m2").toArray().map((elem, index) => elem.value)
+                    let check = validationArray.some(elem => elem == 0)
+                    if (check === true) {
+                        alert("Preencha a metragem")
+                    } else {
+                        //tab pages
+                        $("#orc-pag-2").hide();
+                        $("#orc-pag-3").show();
 
 
-                html = []
-                formResult = []
-                ambientesObj.forEach((elem, index) => {
-                    somaPreco = somaPreco + elem.preco
-                    html.push(
-                        `
+                        let tipo = $("#tipo").val()
+                        let padrao = $("#padrao").val()
+
+                        //bh
+                        let bh = cubFunction(tipo, padrao);
+
+                        //complexidade projeeto
+                        let compProjetoArray = $(".comp-projeto option:selected").toArray().map(elem => + elem.value)
+                        let soma = 0
+                        for (let i = 0; i < compProjetoArray.length; i++) {
+                            soma += compProjetoArray[i]
+                        }
+                        let compProjeto = soma / 5
+
+                        ///ambientes
+
+                        let ambientesArray = $(".amb-nome").toArray().map((elem, index) => elem.value)
+                        let ambientesObj = []
+
+                        ambientesArray.forEach((elem, index) => {
+                            ambientesObj.push(
+                                {
+                                    nome: elem,
+                                    metro: +$(".amb-m2").toArray()[index].value,
+                                    detalhamento: + $(".comp-amb-det").toArray()[index].value,
+                                    aprovacao: +$(".comp-amb-aprov").toArray()[index].value,
+
+                                }
+                            )
+
+                        })
+
+                        /// acrescentando fp,preco a cada ambiente
+
+                        ambientesObj.forEach((elem, index) => {
+                            let soma1 = (elem.detalhamento + elem.aprovacao) / 2;
+                            let soma2 = (soma1 + compProjeto) / 2;
+                            elem.complexidade = soma1;
+                            elem.complexidadeCombinada = soma2;
+                            let fp = fpFunction(soma2);
+                            elem.preco = bh * elem.metro * fp
+                        })
+
+                        ///printando resultado e somando valores de ambiente.
+                        ///somando preço de ambientes
+                        let somaPreco = 0
+
+
+                        html = []
+                        formResult = []
+                        ambientesObj.forEach((elem, index) => {
+                            somaPreco = somaPreco + elem.preco
+                            html.push(
+                                `
                         <div class="col-md-4">
                                 <div class="card mt-2">
                                     <div class="card-header">${elem.nome}</div>
                                     <div class="card-subtitle m-2 text-muted">${elem.metro}m²</div>
                                     <div class="card-text">${elem.preco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</div>
-        
+
                                 </div>
 
                             </div>
 `
-                    )
-                    formResult.push(
-                        `
+                            )
+                            formResult.push(
+                                `
                 <input type="text" name="a_${index}_nome" value="${elem.nome}" hidden >
                 <input type="number" name="a_${index}_m2" value="${elem.metro}" hidden>
                 <input type="number" name="a_${index}_preco" value="${elem.preco}" hidden >
-                
+
                 `
-                    )
+                            )
+
+                        })
+
+                        //return in paragraph
+
+                        $("#result").append(html)
+                        $("#result_soma").append(somaPreco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }))
+                        $("#form-result").prepend(formResult)
+                        $("#form-result").append(`<input type="number" name="total" value="${somaPreco.toFixed(2)}" hidden>`)
+                        $("#form-result").append(`<input type="text" name="data" value="${new Date().toJSON().slice(0, 10)}" hidden>`)
+
+
+
+                    }
 
                 })
 
-                //return in paragraph
 
-                $("#result").append(html)
-                $("#result_soma").append(somaPreco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }))
-                $("#form-result").prepend(formResult)
-                $("#form-result").append(`<input type="number" name="total" value="${somaPreco}" hidden>`)
-                $("#form-result").append(`<input type="text" name="data" value="${new Date().toJSON().slice(0, 10)}" hidden>`)
+                let cub = {
+                    r1B: 2193.59,
+                    r1N: 2608.87,
+                    r1A: 3262.18,
+                    cal8N: 2510.98,
+                    cal8A: 2712.08
+                }
 
-
-
-            }
-
-            })
-
-
-            let cub = {
-                r1B: 2193.59,
-                r1N: 2608.87,
-                r1A: 3262.18,
-                cal8N: 2510.98,
-                cal8A: 2712.08
-            }
-
-            let cubAjustado = {
-                r1B: cub.r1B,
-                r1N: cub.r1N * 1.5,
-                r1A: cub.r1A * 2,
-                cal8N: cub.cal8N,
-                cal8A: cub.cal8A * 1.5
-
-            }
-
-            let fp = {
-                baixo: 0.0733,
-                medio: 0.0839,
-                alto: 0.0961,
-                especial: 0.11
-            }
-
-            let ajusteMercado = 0.2
-            let fpAjustado = {
-                baixo: fp.baixo * ajusteMercado,
-                medio: fp.medio * ajusteMercado,
-                alto: fp.alto * ajusteMercado,
-                especial: fp.especial * ajusteMercado
-            }
-            //fator de ajuste
-
-
-            function cubFunction(tipo, padrao) {
-                let bh = ""
-                if (tipo == "residencial") {
-                    switch (padrao) {
-                        case ("baixo"):
-                            bh = cubAjustado.r1B
-                            break;
-                        case ("normal"):
-                            bh = cubAjustado.r1N
-                            break;
-                        case ("alto"):
-                            bh = cubAjustado.r1A
-                            break;
-                    }
-                } else if (tipo == "comercial") {
-                    switch (padrao) {
-                        case ("normal"):
-                            bh = cubAjustado.cal8N
-                            break;
-                        case ("alto"):
-                            bh = cubAjustado.cal8A
-                            break;
-                    }
-
-                } else {
-                    console.log("erro")
+                let cubAjustado = {
+                    r1B: cub.r1B,
+                    r1N: cub.r1N * 1.5,
+                    r1A: cub.r1A * 2,
+                    cal8N: cub.cal8N,
+                    cal8A: cub.cal8A * 1.5
 
                 }
 
-                return bh
-
-            }
-
-            function fpFunction(complexidade) {
-                let fp = ""
-                if (complexidade <= 0.85) {
-                    fp = fpAjustado.baixo
-                } else if (complexidade >= 0.86 & complexidade < 1) {
-                    fp = fpAjustado.medio
-                } else if (complexidade >= 1 & complexidade < 1.16) {
-                    fp = fpAjustado.alto
-                } else {
-                    fp = fpAjustado.especial
+                let fp = {
+                    baixo: 0.0733,
+                    medio: 0.0839,
+                    alto: 0.0961,
+                    especial: 0.11
                 }
 
-                return fp
+                let ajusteMercado = 0.2
+                let fpAjustado = {
+                    baixo: fp.baixo * ajusteMercado,
+                    medio: fp.medio * ajusteMercado,
+                    alto: fp.alto * ajusteMercado,
+                    especial: fp.especial * ajusteMercado
+                }
+                //fator de ajuste
 
-            }
+
+                function cubFunction(tipo, padrao) {
+                    let bh = ""
+                    if (tipo == "residencial") {
+                        switch (padrao) {
+                            case ("baixo"):
+                                bh = cubAjustado.r1B
+                                break;
+                            case ("normal"):
+                                bh = cubAjustado.r1N
+                                break;
+                            case ("alto"):
+                                bh = cubAjustado.r1A
+                                break;
+                        }
+                    } else if (tipo == "comercial") {
+                        switch (padrao) {
+                            case ("normal"):
+                                bh = cubAjustado.cal8N
+                                break;
+                            case ("alto"):
+                                bh = cubAjustado.cal8A
+                                break;
+                        }
+
+                    } else {
+                        console.log("erro")
+
+                    }
+
+                    return bh
+
+                }
+
+                function fpFunction(complexidade) {
+                    let fp = ""
+                    if (complexidade <= 0.85) {
+                        fp = fpAjustado.baixo
+                    } else if (complexidade >= 0.86 & complexidade < 1) {
+                        fp = fpAjustado.medio
+                    } else if (complexidade >= 1 & complexidade < 1.16) {
+                        fp = fpAjustado.alto
+                    } else {
+                        fp = fpAjustado.especial
+                    }
+
+                    return fp
+
+                }
 
 
 
-        </script>
+            </script>
