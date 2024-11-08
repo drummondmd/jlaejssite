@@ -1,20 +1,33 @@
 <style>
-    #perfil{
-       border-radius: 50%;
-       display: inline-flex;
- }
+    #perfil {
+        border-radius: 50%;
+        display: inline-flex;
+    }
 </style>
 
 <div class="container">
     <div class="row align-items-center my-2">
-        <div class="col-3 text-end" ><img id="perfil" src="https://openclipart.org/image/400px/167281" alt="" width="70px"></div>
-        <div class="col-9"><p class="h4">Olá
-            <%if(locals.actualUser){%>
-                <%=actualUser.nome%>
-            <%}else{%>
-                Usuário
-            <%}%>
-            , Seja Bem Vindo.</p></div>
+        <%if(locals.actualUser){%>
+            <% if(actualUser.foto){%>
+                <div class="col-3 text-end"><img id="perfil" src="<%=actualUser.foto%>" alt="" width="70px"></div>
+                <%}else{%>
+                    <div class="col-3 text-end"><img id="perfil" src="https://openclipart.org/image/400px/167281" alt=""
+                            width="70px"></div>
+                    <% } %>
+                        <%}else{%>
+                            <div class="col-3 text-end"><img id="perfil"
+                                    src="https://openclipart.org/image/400px/167281" alt="" width="70px"></div>
+                            <%}%>
+                                <div class="col-9">
+                                    <p class="h4">Olá
+                                        <%if(locals.actualUser){%>
+                                            <%=actualUser.nome%>
+                                                <%}else{%>
+                                                    Usuário
+                                                    <%}%>
+                                                        , Seja Bem Vindo.
+                                    </p>
+                                </div>
     </div>
 </div>
 
@@ -24,5 +37,5 @@
             <li class="nav-item"><a class="nav-link" href="/admin/home">Home</a></li>
             <li class="nav-item"><a class="nav-link" href="/admin/usuarios">Usuarios</a></li>
             <li class="nav-item"><a href="/admin/projetos" class="nav-link">Projetos</a></li>
-            <li class="nav-item"><a href="/admin/orcamentos" class="nav-link">Orçamentos</a></li>     
+            <li class="nav-item"><a href="/admin/orcamentos" class="nav-link">Orçamentos</a></li>
     </div>

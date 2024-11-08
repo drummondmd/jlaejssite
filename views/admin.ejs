@@ -77,23 +77,27 @@
                                 <tr>
                                     <th colspan="2">Projeto</th>
                                     <th>Etapa Atual</th>
-                                    <th>Data de Entrega</th>
                                     <th>Dias faltantes</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                <% if(locals.etapas){ %>
+                                    <% etapas.forEach(element => {%>
+                                        <tr>
+                                            <td colspan="2"><%=element.nome%></td>
+                                            <td><%=element.nome_etapa%></td>
+                                            <td><%=element.dpe%></td>
+                                        </tr>
+                                    <%}); %>
+
+                                <% }else{ %>
+
                                 <tr>
-                                    <td colspan="2">Item1</td>
-                                    <td>Item2asdasdasdasdasd</td>
-                                    <td>Item3</td>
-                                    <td>Item4</td>
+                                    <td colspan="2">Ainda sem projetos</td>
                                 </tr>
-                                <tr>
-                                    <td colspan="2">Item1</td>
-                                    <td>Item2</td>
-                                    <td>Item3</td>
-                                    <td>Item4</td>
-                                </tr>
+
+                                <% } %>
+
                             </tbody>
                         </table>
 
@@ -113,10 +117,19 @@
                                 <th>Dias sem resposta</th>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Item1</td>
-                                    <td>Iteasdasds2</td>
-                                </tr>
+                                <% if(locals.orcamentos){ %>
+                                    <% orcamentos.forEach(element => {%>
+                                        <tr>
+                                            <td><%=element.nome_projeto%></td>
+                                            <td><%=element.dsr%></td>
+                                        </tr>
+
+ <%                                   }); %>
+                                <% }else{ %>
+                                    <tr>
+                                        <td>Ainda sem dados.</td>
+                                    </tr>
+                                <% } %>
                             </tbody>
                         </table>
 

@@ -80,18 +80,16 @@ app.get("/redirect", (req, res) => {
 app.get("/admin/:route", async (req, res) => {
     const endPoint = req.params.route;
     const user = await getDbUsers();
-    const projetos = await getDbProject()
-    const orcamentos = await getDbOrcamentos('Em aberto')
+    const projetos = await getDbProject();
+    const orcamentos = await getDbOrcamentos('Em Aberto');
+    const etapas = await getDbEtapas()
     const actualUser = req.user
     switch (endPoint) {
         case "usuarios":
             res.render("admin.ejs", { user: user, actualUser: actualUser })
             break;
         case "projetos":
-
-
-
-            res.render("admin-projetos.ejs", { projetos: projetos, actualUser: actualUser })
+            res.render("admin-projetos.ejs", { projetos: projetos, actualUser: actualUser, usuarios: user, orcamentos: orcamentos });
             break;
         case "edit":
             const id = req.query.id
@@ -104,7 +102,7 @@ app.get("/admin/:route", async (req, res) => {
         case "orcamentos":
             res.render("orcamento.ejs", { actualUser: actualUser, orcamentos: orcamentos })
             break;
-        case "home": res.render("admin.ejs", { actualUser: actualUser, projetos: projetos, orcamentos: orcamentos })
+        case "home": res.render("admin.ejs", { actualUser: actualUser, etapas: etapas, orcamentos: orcamentos })
             break;
         default:
             res.redirect("/admin/home")
@@ -157,16 +155,27 @@ app.get("/detalhes-de-projeto/:id", async (req, res) => {
 
 })
 
+app.get("/json/:natureza", async (req, res) => {
+    const id = req.query.id
+    switch (req.params.natureza) {
+        case 'user':
+            const result = await getDbUsers(id)
+            res.json({ dado: result[0] })
+            break;
+        case 'orcamentos':
+            const result_orc = await getDbOrcamentos(id)
+            res.json({ dado: result_orc[0] })
+            break;
+        default:
+            res.json({ dado: 'Nenhum dado encontrado' })
+            break;
+    }
+})
 
 
-// app.get("/projetos/:id", (req, res) => {
-//     res.send("Ok")
-//     });
+// POST
 
-
-
-//post request
-
+//login
 app.post(
     "/login",
     passport.authenticate("local", {
@@ -174,7 +183,7 @@ app.post(
         successRedirect: "/redirect",
         failureMessage: true
     }))
-
+//registro usuario
 app.post("/register", async (req, res) => {
     const dn = new Date(req.body.dn)
     console.log(req.body, dn)
@@ -209,7 +218,7 @@ app.post("/register", async (req, res) => {
 
 
 });
-
+///editar usuario
 app.post("/updateUser/:id", async (req, res,) => {
     const id = req.params.id
     await queryUpdate("admninistrador", req.body.administrador, id)
@@ -237,46 +246,32 @@ app.post("/updateUser/:id", async (req, res,) => {
     res.redirect("/admin/usuarios");
 
 });
-
+//novo-projeto
 app.post("/projeto-novo", async (req, res) => {
     // const teste = {
-    //     id_cliente: '',
+    //     id_cliente: '13',
     //     nome_cliente: 'Maria ',
     //     sobrenome_cliente: 'Alice',
     //     dn: '2000-10-25',
     //     sexo: 'Feminino',
     //     email: 'maria@gmail.com',
     //     tel: '31999108076',
-    //     nome_projeto: 'Casa Da Alice',
-    //     cidade: 'Goiania',
-    //     endereco: 'Rua das bromelias, 766, Bairro sabe se lá.',
+    //     nome_projeto: 'Casa da José Alfredo',
+    //     cidade: 'BH',
+    //     endereco: 'Rua Rio Grande do Norte, 916, Savassi',
     //     tipo_estabelecimento: 'residencial',
     //     padrao_estabelecimento: 'normal',
-    //     valor_orcamento: '10000',
-    //     valor_est_obra: '250000',
+    //     valor_orcamento: '4388',
+    //     valor_est_obra: '35000000',
     //     etapa0: 'Pré liminar',
-    //     prazo_etapa0: '10',
-    //     etapa1: 'Briefing',
-    //     prazo_etapa1: '20',
-    //     etapa2: 'autocad',
-    //     prazo_etapa2: '30',
-    //     etapa3: 'Final',
-    //     prazo_etapa3: '40',
-    //     data_projeto: '2024-10-25'
+    //     prazo_etapa0: '2024-12-08',
+    //     etapa1: 'Final',
+    //     prazo_etapa1: '2024-12-08',
+    //     data_projeto: '2024-11-08'
     // }
-    let awnser =req.body
-    const checkEtapas = ['etapa0', 'prazo_etapa0', 'etapa1', 'prazo_etapa1', 'etapa2', 'prazo_etapa2', 'etapa3', 'prazo_etapa3', 'etapa4', 'prazo_etapa4'];
-    //ajustar etapas se nem todas forem preenchidas
-    for (let i = 0; i < checkEtapas.length; i++) {
-        let property = checkEtapas[i]
-        if (awnser.hasOwnProperty(property)) {
-            // já existe, nada a se fazer então.
-        } else {
-            awnser[property] = null
-            //se não existe, acrescentar e incluir valor nulo.
-        }
+    // let awnser = req.body
+    let awnser = req.body
 
-    }
     //checar se cliente já registrado, se não adicionar cliente.
     if (awnser.id_cliente == '') {
         try {
@@ -284,43 +279,68 @@ app.post("/projeto-novo", async (req, res) => {
             const rows = response.rows[0]
             const newID = rows.id
             awnser.id_cliente = newID
+            console.log(`Adiconado cliente,${newID}`)
             await step2(newID)
 
         } catch (error) {
             console.log(error, "Erro na query de inserir os clientes")
         }
-    }else{
-    await step2(awnser.id_cliente)
-}
-async function step2(newID) {
-    const arrayOfResults = [awnser.nome_projeto, awnser.endereco, awnser.valor_orcamento, awnser.tipo_estabelecimento, false, "Em andamento", awnser.valor_est_obra,awnser.data_projeto, awnser.cidade, awnser.padrao_estabelecimento, awnser.etapa0, awnser.prazo_etapa0, awnser.etapa1, awnser.prazo_etapa1, awnser.etapa2, awnser.prazo_etapa2, awnser.etapa3, awnser.prazo_etapa3, awnser.etapa4, awnser.prazo_etapa4];
-    ///adionar projeto a base de projetos
-    try {
-        const response = await db.query("INSERT INTO projetos (nome,endereco,orcamento,finalidade,display,status,custo_obra,data_projeto,cidade,padrao,etapa0,prazo_etapa0,etapa1,prazo_etapa1,etapa2,prazo_etapa2,etapa3,prazo_etapa3,etapa4,prazo_etapa4) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20) RETURNING id", arrayOfResults)
-        const rows = response.rows[0]
-        const projectId = rows.id
-        await step3(projectId,newID)
+    } else {
+        console.log(`Cliente existente,${awnser.id_cliente}`)
+        await step2(awnser.id_cliente)
+    }
 
-    } catch (error) {
-        console.log("Erro na query do projeto", error)
+    async function step2(newID) {
+        const arrayOfResults = [awnser.nome_projeto, awnser.endereco, awnser.valor_orcamento, awnser.tipo_estabelecimento, false, "Em andamento", awnser.valor_est_obra, awnser.data_projeto, awnser.cidade, awnser.padrao_estabelecimento];
+        ///adionar projeto a base de projetos
+        try {
+            const response = await db.query("INSERT INTO projetos (nome,endereco,orcamento,finalidade,display,status,custo_obra,data_projeto,cidade,padrao) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING id", arrayOfResults)
+            const rows = response.rows[0]
+            const projectId = rows.id
+            ///relacionando cliente a projeto
+            await step3(projectId, newID);
+            ///inserindo etapas em outra tabela
+            await step4(projectId)
+
+        } catch (error) {
+            console.log("Erro na query do projeto", error)
+
+        }
 
     }
 
-}
+    ///fazer relation cliente/projeto
+    async function step3(projectId, newID) {
+        try {
+            db.query("INSERT INTO relation_table (client_id,project_id) VALUES ($1,$2)", [newID, projectId])
+            console.log("Relação registrada")
+        } catch (error) {
+            console.log("erro na query das relacoes", error)
 
-///fazer relation cliente/projeto
-async function step3(projectId,newID) {
-    try {
-        db.query("INSERT INTO relation_table (client_id,project_id) VALUES ($1,$2)", [newID, projectId])
-        console.log("Relação registrada")
-    } catch (error) {
-        console.log("erro na query das relacoes", error)
-
+        }
+        res.redirect("/admin/projetos")
     }
-    res.redirect("/admin/projetos")
-}
 
+    async function step4(project_id) {
+        const keys = Object.keys(awnser)
+        const filter = keys.filter((elem, index) => elem.includes('etapa'));
+        const map = filter.sort()
+        const map1 = map.slice(0, (filter.length) / 2)
+        for (let i = 0; i < map1.length; i++) {
+            let elem = map1[i]
+            let nome_etapa = awnser[elem]
+            let nome_prazo = `prazo_etapa${i}`
+            let prazo_etapa = awnser[nome_prazo]
+            try {
+                await db.query('INSERT INTO etapas (nome_etapa,prazo,project_id,status) VALUES ($1,$2,$3,$4)', [nome_etapa, prazo_etapa, project_id, "Em aberto"])
+                console.log(`Adiocinado etapas ${nome_etapa}`)
 
+            } catch (error) {
+                console.log(error, "erro ao inserir etapas")
+
+            }
+        }
+    }
 })
 
 app.post("/editar-projeto", async (req, res) => {
@@ -429,7 +449,7 @@ app.post("/novo-orcamento", async (req, res) => {
 passport.use(
     "local",
     new Strategy(async function verify(username, password, cb) {
-        const result = await getDbUsers(username);
+        const result = await getDbUsersLogin(username);
         if (result.length > 0) {
             const user = result[0]
             const storedHashedPassword = user.senha;
@@ -470,19 +490,72 @@ passport.deserializeUser((user, cb) => {
 
 ///basic functions
 app.get("/teste", async (req, res) => {
-    res.render("teste.ejs")
+    const teste = {
+        id_cliente: '13',
+        nome_cliente: 'Maria ',
+        sobrenome_cliente: 'Alice',
+        dn: '2000-10-25',
+        sexo: 'Feminino',
+        email: 'maria@gmail.com',
+        tel: '31999108076',
+        nome_projeto: 'Casa do Marcelo',
+        cidade: 'BH',
+        endereco: 'Rua Rio Grande do Norte, 916, Savassi',
+        tipo_estabelecimento: 'residencial',
+        padrao_estabelecimento: 'normal',
+        valor_orcamento: '4388',
+        valor_est_obra: '35000000',
+        etapa0: 'Pré liminar',
+        prazo_etapa0: '2024-12-08',
+        etapa1: 'Final',
+        prazo_etapa1: '2024-12-08',
+        etapa2: 'Final',
+        prazo_etapa2: '2024-12-08',
+        data_projeto: '2024-11-08'
+    }
 
+    let awnser = teste
+    step4(1)
 
+    async function step4(project_id) {
+        const keys = Object.keys(awnser)
+        const filter = keys.filter((elem, index) => elem.includes('etapa'));
+        const map = filter.sort()
+        const map1 = map.slice(0, (filter.length) / 2)
+        console.log(awnser.etapa0)
+        for (let i = 0; i < map1.length; i++) {
+            console.log(i, map1[i])
+            let elem = map1[i]
+            let nome_etapa = awnser[elem]
+            let nome_prazo = `prazo_etapa${i}`
+            let prazo_etapa = awnser[nome_prazo]
+            console.log(nome_etapa, nome_prazo, prazo_etapa)
+
+            // try {
+            //     await db.query('INSERT INTO etapas (nome_etapa,prazo,project_id,status) VALUES ($1,$2,$3,$4)',[nome_etapa,prazo_etapa,project_id,"Em aberto"])
+
+            // } catch (error) {
+            //     console.log(error,"erro ao inserir etapas")
+
+            // }
+        }
+    }
+    res.sendStatus(200)
 })
 
 // Basic functions
 
-async function getDbUsers(name) {
-    if (name == undefined) {
+async function getDbUsersLogin(name) {
+    const result = await db.query("SELECT * FROM usuarios WHERE email = $1", [name]);
+    return result.rows
+}
+
+async function getDbUsers(id) {
+    if (id == undefined) {
         const result = await db.query("SELECT * FROM usuarios")
         return result.rows
     } else {
-        const result = await db.query("SELECT * FROM usuarios WHERE email = $1", [name]);
+        const result = await db.query("SELECT * FROM usuarios WHERE id = $1", [id]);
         return result.rows
     }
 }
@@ -497,12 +570,34 @@ async function getDbProject(name) {
     }
 }
 
+async function getDbEtapas() {
+    const result = await db.query("SELECT etapas.*,projetos.nome FROM etapas INNER JOIN projetos ON etapas.project_id = projetos.id WHERE etapas.status = 'Em aberto'")
+    const array = result.rows
+    array.forEach((elem) => {
+        let today = new Date()
+        let prazo = new Date(elem.prazo)
+        let diff = prazo - today
+        const diffDays = Math.floor(diff / (1000 * 60 * 60 * 24));
+        elem['dpe'] = diffDays
+    })
+    return array
+}
+
 async function getDbOrcamentos(status) {
     if (status == 'Em Aberto') {
-        const result = await db.query("SELECT * FROM orcamentos WHERE status = 'Em aberto'")
-        return result.rows
+        const result = await db.query("SELECT * FROM orcamentos WHERE status = 'Em Aberto'")
+        const array = result.rows
+        array.forEach((elem) => {
+            let today = new Date()
+            let data = new Date(elem.data)
+            let diff = today - data
+            const diffDays = Math.floor(diff / (1000 * 60 * 60 * 24));
+            elem['dsr'] = diffDays
+        })
+        return array
+
     } else {
-        const result = await db.query("SELECT * FROM orcamentos");
+        const result = await db.query("SELECT * FROM orcamentos WHERE id=$1", [status]);
         return result.rows
     }
 }

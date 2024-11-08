@@ -1,5 +1,5 @@
 <%- include ('partials/header.ejs') %>
-<%- include ('partials/admin-header.ejs') %>
+    <%- include ('partials/admin-header.ejs') %>
 
 
 
@@ -14,156 +14,184 @@
                 </div>
             </div>
 
-            <div class="row justify-content-md-center" id="novo-projeto">
+            <div class="row justify-content-md-center" id="novo-projeto" style="display: none;">
                 <div class="col-md-10 mt-3">
                     <div>
                         <div class="row container" id="busca">
-                                <div class="form-group">
+                            <div class="form-group">
                                 <label for="orc-search">Selecionar orçamento atual:</label>
-                                <input class="form-control dl-search" type="text" list="orc-search-all">
-                                <datalist id="orc-search-all">
-                                    <option value="item1"></option>
-                                    <option value="item2"></option>
-                                    <option value="item3"></option>
-                                    <option value="item4"></option>
-                                </datalist>
+                                <input class="form-control dl-search" type="text" name="orc-search"
+                                    list="orc-search-all">
+                                <% if(locals.orcamentos){%>
+                                    <%let orc=orcamentos%>
+                                        <datalist id="orc-search-all">
+                                            <% orcamentos.forEach((elem)=>{%>
+                                                <option value="<%=elem.id%>">
+                                                    <%=elem.nome_projeto%>(<%=elem.nome_cliente%>
+                                                            <%=elem.sobrenome_cliente%>)
+                                                </option>
+                                                <% }) %>
+                                        </datalist>
+                                        <%}else{ %>
+                                            <datalist id="orc-search-all">
+                                                <option value="null">Nenhum orçamento encontrado</option>
+                                            </datalist>
+                                            <% } %>
                             </div>
                             <div class="form-group">
                                 <label for="client-search">Selecionar cliente atual:</label>
-                                <input class="form-control dl-search" type="text" list="client-search">
-                                <datalist id="client-search">
-                                    <option value="item01"></option>
-                                    <option value="item02"></option>
-                                    <option value="item03"></option>
-                                </datalist>
+                                <input class="form-control dl-search" type="text" name="user-search"
+                                    list="client-search-all">
+                                <% if(locals.usuarios){%>
+                                    <datalist id="client-search-all">
+                                        <% usuarios.forEach((elem)=>{%>
+                                            <option value="<%=elem.id%>">
+                                                <%=elem.nome%>
+                                                    <%=elem.sobrenome%>
+                                            </option>
+                                            <% }) %>
+                                    </datalist>
+                                    <%}else{ %>
+                                        <datalist id="client-searchl">
+                                            <option value="null">Nenhum usuário encontrado</option>
+                                        </datalist>
+                                        <% } %>
+
+
                             </div>
-                            <div class="mt-2 col text-center"><button type="button" class="btn btn-outline-primary col-12">Adicionar Cliente e Projeto manualmente ou</button></div>
+                            <div class="mt-2 col text-center"><button type="button"
+                                    class="btn btn-outline-primary col-12">Adicionar Cliente e Projeto manualmente
+                                    ou</button></div>
 
                         </div>
                         <div class="my-3">
                             <hr>
                         </div>
 
-                    <form action="/projeto-novo" method="post" style="display: none;">
+                        <form action="/projeto-novo" method="post" style="display: none;">
 
 
-                        <div id="detalhe-cliente" class="container" >
-                            <div class="row">
+                            <div id="detalhe-cliente" class="container">
+                                <div class="row">
                                     <div class="form-group col-md-3">
-                                    <label class="form-label" for="nome_cliente">Nome do cliente:</label>
-                                    <input type="text" name="id_cliente" hidden>
-                                    <input class="form-control" name="nome_cliente" type="text" id="nome_cliente"
-                                        placeholder="Nome do Cliente">
-                                </div>
-                                <div class="form-group col-md-5">
-                                    <label class="form-label" for="sobrenome_cliente">Sobrenome</label>
-                                    <input class="form-control" name="sobrenome_cliente" type="text" id="nome_cliente"
-                                        placeholder="Sobrenome">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-3">
-                                    <label class="form-label" for="dn">Data de Nascimento:</label>
-                                    <input class="form-control" name="dn" id="dn" type="date" class="">
-                                </div>
-
-                                <div class="form-group col-md-3">
-                                    <label class="form-label" for="sexo">Sexo:</label>
-                                    <select name="sexo" id="sexo" class="form-select">
-                                        <option value="Selecione" disabled selected>Selecione</option>
-                                        <option value="Masculino">Masculino</option>
-                                        <option value="Feminino">Feminino</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-4">
-                                    <label class="form-label" for="email">Email:</label>
-                                    <input type="email" class="form-control" name="email" id="email"
-                                        placeholder="email">
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label" for="tel">Telefone:</label>
-                                    <input type="tel" class="form-control" name="tel" id="tel"
-                                        placeholder="Numero de Telefone">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="container" id="detalhe-projeto" >
-                            <div class="form-group col-md-4"></div>
-                            <label class="form-label" for="nome_projeto">Nome do Projeto</label>
-                            <input type="text" name="nome_projeto" id="nome_projeto" placeholder="Nome do projeto"
-                                class="form-control mb-3">
-
-                            <div class="form-group col-md-4">
-                                <label class="form-label" for="cidade">Cidade</label>
-                                <input type="text" class="form-control" name="cidade" id="" placeholder="Cidade">
-                            </div>
-                            <div class="form-group col-md-8">
-                                <label class="form-label" for="endereco">Endereço:</label>
-                                <input type="text" class="form-control" name="endereco" id="endereco"
-                                    placeholder="Endereço">
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-3">
-                                    <label for="tipo">Tipo de Estabelecimento</label>
-                                    <select name="tipo_estabelecimento" id="tipo" class="form-select mb-3">
-                                        <option>...</option>
-                                        <option value="residencial">Residencial</option>
-                                        <option value="comercial">Comercial</option>
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label for="padrao">Padrão de construção:</label>
-                                    <select name="padrao_estabelecimento" id="padrao" class="form-select mb-3">
-                                        <option value="baixo">Baixo padrão</option>
-                                        <option value="normal" selected>Normal</option>
-                                        <option value="alto">Alto padrão</option>
-                                    </select>
-                                </div>
-
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-3">
-                                    <label for="valor_orcamento">Valor do Orçamento</label>
-                                    <input name="valor_orcamento" id="valor_orcamento" type="number" class="form-control">
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label for="valor_est_obra">Valor estimado da Obra:</label>
-                                    <input type="number" name="valor_est_obra" id="valor_est_obra" class="form-control">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="container" id="etapas">
-                            <div class="row align-items-end">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="etapas" class="form-label">Etapas:</label>
-                                        <input type="number" class="form-control" id="etapasInput" min="1">
+                                        <label class="form-label" for="nome_cliente">Nome do cliente:</label>
+                                        <input type="text" name="id_cliente" hidden>
+                                        <input class="form-control" name="nome_cliente" type="text" id="nome_cliente"
+                                            placeholder="Nome do Cliente">
+                                    </div>
+                                    <div class="form-group col-md-5">
+                                        <label class="form-label" for="sobrenome_cliente">Sobrenome</label>
+                                        <input class="form-control" name="sobrenome_cliente" type="text"
+                                            id="nome_cliente" placeholder="Sobrenome">
                                     </div>
                                 </div>
-                                <div class="col-md-2">
-                                    <button type="button" class="btn btn-outline-primary" id="etapaBtn">Acrescentar:</button>
+                                <div class="row">
+                                    <div class="form-group col-md-3">
+                                        <label class="form-label" for="dn">Data de Nascimento:</label>
+                                        <input class="form-control" name="dn" id="dn" type="date" >
+                                    </div>
+
+                                    <div class="form-group col-md-3">
+                                        <label class="form-label" for="sexo">Sexo:</label>
+                                        <select name="sexo" id="sexo" class="form-select">
+                                            <option value="Selecione" disabled selected>Selecione</option>
+                                            <option value="Masculino">Masculino</option>
+                                            <option value="Feminino">Feminino</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <label class="form-label" for="email">Email:</label>
+                                        <input type="email" class="form-control" name="email" id="email"
+                                            placeholder="email">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label" for="tel">Telefone:</label>
+                                        <input type="tel" class="form-control" name="tel" id="tel"
+                                            placeholder="Numero de Telefone">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="container" id="detalhe-projeto">
+                                <div class="form-group col-md-4"></div>
+                                <label class="form-label" for="nome_projeto">Nome do Projeto</label>
+                                <input type="text" name="nome_projeto" id="nome_projeto" placeholder="Nome do projeto"
+                                    class="form-control mb-3">
+
+                                <div class="form-group col-md-4">
+                                    <label class="form-label" for="cidade">Cidade</label>
+                                    <input type="text" class="form-control" name="cidade" id="" placeholder="Cidade">
+                                </div>
+                                <div class="form-group col-md-8">
+                                    <label class="form-label" for="endereco">Endereço:</label>
+                                    <input type="text" class="form-control" name="endereco" id="endereco"
+                                        placeholder="Endereço">
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-3">
+                                        <label for="tipo">Tipo de Estabelecimento</label>
+                                        <select name="tipo_estabelecimento" id="tipo" class="form-select mb-3">
+                                            <option>...</option>
+                                            <option value="residencial">Residencial</option>
+                                            <option value="comercial">Comercial</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="padrao">Padrão de construção:</label>
+                                        <select name="padrao_estabelecimento" id="padrao" class="form-select mb-3">
+                                            <option value="baixo">Baixo padrão</option>
+                                            <option value="normal" selected>Normal</option>
+                                            <option value="alto">Alto padrão</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-3">
+                                        <label for="valor_orcamento">Valor do Orçamento</label>
+                                        <input name="valor_orcamento" id="valor_orcamento" type="number"
+                                            class="form-control">
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="valor_est_obra">Valor estimado da Obra:</label>
+                                        <input type="number" name="valor_est_obra" id="valor_est_obra"
+                                            class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="container" id="etapas">
+                                <div class="row align-items-end">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="etapas" class="form-label">Etapas:</label>
+                                            <input type="number" class="form-control" id="etapasInput" min="1">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-outline-primary"
+                                            id="etapaBtn">Acrescentar:</button>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="row" id="etapasContainer">
+                                    <!--Aqui será inserido as etapas após clique do botão-->
+
                                 </div>
 
                             </div>
-
-
-                            <div class="row" id="etapasContainer">
-                                <!--Aqui será inserido as etapas após clique do botão-->
-
+                            <div id="hidden">
+                                <input type="text" id="datePicker" name="data_projeto" hidden>
                             </div>
-
-                        </div>
-                        <div id="hidden">
-                            <input type="text" id="datePicker" name="data_projeto" hidden>
-                        </div>
-                        <div class="m-4">
-                            <input class="btn btn-outline-primary col-10" type="submit" value="Enviar" style="display: none;">
-                        </div>
-                    </form>
+                            <div class="m-4">
+                                <input class="btn btn-outline-primary col-10" type="submit" value="Enviar"
+                                    style="display: none;">
+                            </div>
+                        </form>
 
 
 
@@ -173,7 +201,7 @@
                 </div>
             </div>
 
-            <div id="projetos-atuais" style="display: none;" >
+            <div id="projetos-atuais">
                 <div class="row container">
                     <%if(locals.projetos){%>
                         <%projetos.forEach(element=>{%>
@@ -221,6 +249,12 @@
 
             <script>
 
+                async function buscandoDados(natureza,id) {
+                    const response = await fetch(`/json/${natureza}?id=${id}`)
+                    const data = await response.json();
+                    return data.dado
+                }
+
                 $("#novoBtn").on("click", function () {
                     $("#novo-projeto").show();
                     $("#projetos-atuais").hide();
@@ -231,22 +265,44 @@
                     $("#projetos-atuais").show();
                 })
 
-                $("#busca button").on("click", function () {
-                    $("form").show()
-                    })
+                $("#busca button").on("click", async function () {
+                    let orc = $("input[name=orc-search]").val()
+                    let user = $("input[name=user-search]").val()
+                    if(user != ""){
+                        const data_user = await buscandoDados('user',user)
+                        $("input[name=nome_cliente]").val(data_user.nome);
+                        $("input[name=id_cliente]").val(data_user.id);
+                        $("input[name=sobrenome_cliente]").val(data_user.sobrenome);
+                        $("input[name=dn]").val(new Date(data_user.nascimento).toJSON().slice(0, 10));
+                        $("select[name=sexo]").val(data_user.sexo);
+                        $("input[name=email]").val(data_user.email);
+                        $("input[name=tel]").val(data_user.tel);
+                    }
+                    if(orc != "" ){
+                        const data_orc = await buscandoDados('orcamentos',orc)
+                        console.log(data_orc)
+                        $("input[name=nome_projeto]").val(data_orc.nome_projeto);
+                        $("input[name=cidade]").val(data_orc.cidade);
+                        $("input[name=endereco]").val(data_orc.endereco);
+                        $("input[name=valor_orcamento]").val(data_orc.total);
+                    }
 
-                $(".novo-btn").on("click",function(){
-                    let val =this.text
+
+                    $("form").show()
+                })
+
+                $(".novo-btn").on("click", function () {
+                    let val = this.text
                     console.log(val)
                 })
 
-                $("#etapaBtn").on("click",function(){
+                $("#etapaBtn").on("click", function () {
                     let val = $('#etapasInput').val();
-                    if(val<1){
+                    if (val < 1) {
                         alert("Erro ao inserir Etapas")
-                    }else{
+                    } else {
                         let html = []
-                        for(let i=0; i<val;i++){
+                        for (let i = 0; i < val; i++) {
                             html.push(
                                 `
                                 <div class="row">
@@ -256,7 +312,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label for="" class="form-label">Prazo, em dias uteis:</label>
-                                    <input type="number" class="form-control" name="prazo_etapa${i}">
+                                    <input type="date" class="form-control" name="prazo_etapa${i}">
                                 </div>
                                 </div>
 
