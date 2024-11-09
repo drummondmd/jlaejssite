@@ -1,5 +1,107 @@
 <%- include('partials/header.ejs') %>
 
+<style>
+    body{
+        background-color: aliceblue;
+    }
+</style>
+<div class="row m-4"></div>
+
+<div class="row">
+    <div class="col-2 mt-2">
+        <ul class="nav nav-pills nav-fill flex-column bg-light rounded">
+            <li class="nav-item"><a class="nav-link" href="/admin/home">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="/admin/usuarios">Usuarios</a></li>
+            <li class="nav-item"><a href="/admin/projetos" class="nav-link">Projetos</a></li>
+            <li class="nav-item"><a href="/admin/orcamentos" class="nav-link">Orçamentos</a></li>
+            <li class="nav-item"><a href="/logout" class="nav-link">Sair</a></li>
+    </div>
+    <div class="col-9 mt-2" style="background-color: beige;">
+    <div class="row">
+        <div class="col-6">
+            <% if(locals.projeto){%>
+                <p class="h3"><%=projeto.nome%></p>
+                <p ><%=projeto.finalidade%>,<%=projeto.cidade%></p>
+                <p ><%=projeto.endereco%></p>
+                <p ><%=projeto.status%></p>
+
+            <% }else{ %>
+                <p>Algo deu errado ao renderizar projeto</p>
+                <% } %>
+
+        </div>
+        <div class="col-6">
+            <div class="row">
+                <div class="col m-2">Seletor de fotos ou etapas</div>
+            </div>
+            <div class="row">
+                <div class="col-12" id="fotos-projeto" style="display: none;">
+                    Fotos
+
+                </div>
+                <div class="col-12" id="etapas-projeto">
+                    <table class="table table-striped">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Etapa:</th>
+                                <th>Dias faltantes</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if(locals.etapas){ %>
+                                <% if(etapas.length == 0){ %>
+                                    <tr>
+                                        <td colspan="3">Nenhuma etapa registrada</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Finalizar Projeto?</td>
+                                        <td colspan="2">Botão?</td>
+                                    </tr>
+                                    <% }else{ %>
+
+                                <%etapas.forEach(element => {%>
+                                    <tr>
+                                        <td><%=element.nome_etapa%></td>
+                                        <td><%=element.dpe%></td>
+                                        <td>
+                                            <form action="/atualizar-etapas/<%=element.id%>" method="post">
+                                                <select name="status" id="status" class="form-select" onchange="this.form.submit()">
+                                                    <option value="<%= element.status %>" selected><%= element.status %></option>
+                                                    <option value="Finalizado">Finalizado</option>
+                                                    <option value="Em aberto">Em aberto</option>
+
+                                                </select>
+
+                                            </form>
+                                        </td>
+                                    </tr>
+                                <%}); %>
+                                <% } %>
+
+                            <% }else{ %>
+
+                            <tr>
+                                <td colspan="4">Nenhuma etapa do projeto registrada</td>
+                            </tr>
+
+                            <% } %>
+
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row"><div class="col">Painel de Comandos</div></div>
+    <div class="row"><div class="col">Comandos e ações</div></div>
+
+
+    </div>
+</div>
+
+
 <div class="container">
 
     <% if(locals.projeto){%>
@@ -101,31 +203,31 @@
                                     <option value="">Selecionar cliente</option>
                                     <% users.forEach(element => {%>
                                         <option value="<%= element.id %>"> <%= element.nome%> <%= element.sobrenome%> </option>
-            
-            
-            
+
+
+
                                    <% }) %>
                                     </select>
-                                
+
                             </div>
-            
+
                        <% }else{ %>
                         <input class="form-control" type="text" name="cliente">
-            
-            
-            
+
+
+
                         <% }%>
-            
-            
-            
-            
+
+
+
+
                     </div>
                     <input type="submit" class="btn btn-outline-primary">
-            
+
                 </form>
-                
-            
-            
+
+
+
             </div>
 
         </div>
@@ -135,7 +237,7 @@
             <div clas="section-edit" id="adicionar-link" style="display: none;">
                 <form action="/link-add" method="post">
                     <input name="id" type="number" readonly value="<%=projeto.id%>" >
-                
+
                     <label for="type">Tipo de documento</label>
                     <select name="type" id="type">
                         <option selected >...</option>
@@ -168,7 +270,7 @@
                 </form>
                 <button>Acrescentar outro</button>
 
-            
+
                 form para adicionar links
 
             </div>
@@ -184,7 +286,7 @@
                                 <li><%=element.link%></li>
                            <% })  %>
                         </ul>
-                        
+
                         <% } %>
                 </div>
 
@@ -202,6 +304,8 @@
 <% }else{%>
     <p>Ooops, algo deu errado</p>
 <%} %>
+
+
 
 <%- include('partials/footer.ejs') %>
 
@@ -223,7 +327,7 @@
         console.log(lastClicked)
         // $(".section-edit").css("display:none")
         // $("#"+order+"").toggle()
-    
+
     });
 
 

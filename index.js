@@ -81,7 +81,7 @@ app.get("/admin/:route", async (req, res) => {
     const endPoint = req.params.route;
     const user = await getDbUsers();
     const projetos = await getDbProject();
-    const orcamentos = await getDbOrcamentos('Em Aberto');
+    const orcamentos = await getDbOrcamentos('Em aberto');
     const etapas = await getDbEtapas()
     const actualUser = req.user
     switch (endPoint) {
@@ -97,7 +97,8 @@ app.get("/admin/:route", async (req, res) => {
             let projeto = result[0]
             const array = await getDocuments(id)
             const users = user.map((element) => ({ nome: element.nome + " " + element.sobrenome, id: element.id }))
-            res.render("edit.ejs", { projeto: projeto, users: users, documentos: array })
+            let etapaProjeto = await getDbEtapas(id)
+            res.render("edit.ejs", { projeto: projeto, users: users, documentos: array, etapas: etapaProjeto })
             break;
         case "orcamentos":
             res.render("orcamento.ejs", { actualUser: actualUser, orcamentos: orcamentos })
@@ -443,6 +444,20 @@ app.post("/novo-orcamento", async (req, res) => {
     res.redirect("/admin/home")
 })
 
+app.post("/atualizar-etapas/:id", async (req, res) => {
+    const id = req.params.id
+    const status = req.body.status
+    const url = req.header('Referer');
+    try {
+        await db.query("UPDATE etapas SET status =$1 WHERE id = $2",[status,id])
+
+    } catch (error) {
+        console.log(error,"Erro ao atualizar etapas")
+
+    }
+    res.redirect(url)
+})
+
 //autentication
 
 //local
@@ -570,22 +585,42 @@ async function getDbProject(name) {
     }
 }
 
-async function getDbEtapas() {
-    const result = await db.query("SELECT etapas.*,projetos.nome FROM etapas INNER JOIN projetos ON etapas.project_id = projetos.id WHERE etapas.status = 'Em aberto'")
-    const array = result.rows
-    array.forEach((elem) => {
-        let today = new Date()
-        let prazo = new Date(elem.prazo)
-        let diff = prazo - today
-        const diffDays = Math.floor(diff / (1000 * 60 * 60 * 24));
-        elem['dpe'] = diffDays
-    })
-    return array
+async function getDbEtapas(project_id) {
+    if (project_id == null) {
+        const result = await db.query("SELECT etapas.*,projetos.nome FROM etapas INNER JOIN projetos ON etapas.project_id = projetos.id WHERE etapas.status = 'Em aberto'")
+        const array = result.rows
+        array.forEach((elem) => {
+            let today = new Date()
+            let prazo = new Date(elem.prazo)
+            let diff = prazo - today
+            const diffDays = Math.floor(diff / (1000 * 60 * 60 * 24));
+            elem['dpe'] = diffDays
+        })
+        return array
+    } else {
+        try {
+            const result = await db.query("SELECT * FROM etapas WHERE project_id = $1", [project_id])
+            const array = result.rows
+            array.forEach((elem) => {
+                let today = new Date()
+                let prazo = new Date(elem.prazo)
+                let diff = prazo - today
+                const diffDays = Math.floor(diff / (1000 * 60 * 60 * 24));
+                elem['dpe'] = diffDays
+            })
+            return array
+
+        } catch (error) {
+            console.log(error, "Erro ao buscar etapas")
+        }
+    }
+
+
 }
 
 async function getDbOrcamentos(status) {
-    if (status == 'Em Aberto') {
-        const result = await db.query("SELECT * FROM orcamentos WHERE status = 'Em Aberto'")
+    if (status == 'Em aberto') {
+        const result = await db.query("SELECT * FROM orcamentos WHERE status = 'Em aberto'")
         const array = result.rows
         array.forEach((elem) => {
             let today = new Date()
