@@ -96,6 +96,7 @@ app.get("/admin/:route", async (req, res) => {
             let result = await getDbProject(id)
             let projeto = result[0]
             const array = await getDocuments(id)
+            console.log(array)
             const users = user.map((element) => ({ nome: element.nome + " " + element.sobrenome, id: element.id }))
             let etapaProjeto = await getDbEtapas(id)
             res.render("edit.ejs", { projeto: projeto, users: users, documentos: array, etapas: etapaProjeto })

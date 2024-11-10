@@ -32,14 +32,18 @@
         </div>
         <div class="col-6">
             <div class="row">
-                <div class="col m-2">Seletor de fotos ou etapas</div>
+                <div class="col m-2 btn-group">
+                    <button type="button" class="btn btn-outline-secondary">Etapas</button>
+                    <button type="button" class="btn btn-outline-secondary">Fotos</button>
+                    <button type="button" class="btn btn-outline-secondary">Documentos</button>
+                </div>
             </div>
             <div class="row">
                 <div class="col-12" id="fotos-projeto" style="display: none;">
                     Fotos
 
                 </div>
-                <div class="col-12" id="etapas-projeto">
+                <div class="col-12" id="etapas-projeto" style="display: none;">
                     <table class="table table-striped">
                         <thead class="thead-light">
                             <tr>
@@ -55,8 +59,9 @@
                                         <td colspan="3">Nenhuma etapa registrada</td>
                                     </tr>
                                     <tr>
-                                        <td>Finalizar Projeto?</td>
-                                        <td colspan="2">Botão?</td>
+                                        <td colspan="3">
+                                            <button id="finalizar-projeto" type="button" class="btn btn-success col-12">Finalizar Projeto</button>
+                                        </td>
                                     </tr>
                                     <% }else{ %>
 
@@ -77,6 +82,11 @@
                                         </td>
                                     </tr>
                                 <%}); %>
+                                <tr>
+                                    <td colspan="3">
+                                        <button id="finalizar-projeto" type="button" class="btn btn-success col-12">Finalizar Projeto</button>
+                                    </td>
+                                </tr>
                                 <% } %>
 
                             <% }else{ %>
@@ -91,55 +101,121 @@
                     </table>
 
                 </div>
+                <div class="col-12" id="documentos-projeto">
+                    <% if(locals.documentos){ %>
+                        <% documentos.arrayDocumentos.forEach(element => { %>
+                            <div class="col-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-file-word" viewBox="0 0 16 16">
+                                    <path d="M4.879 4.515a.5.5 0 0 1 .606.364l1.036 4.144.997-3.655a.5.5 0 0 1 .964 0l.997 3.655 1.036-4.144a.5.5 0 0 1 .97.242l-1.5 6a.5.5 0 0 1-.967.01L8 7.402l-1.018 3.73a.5.5 0 0 1-.967-.01l-1.5-6a.5.5 0 0 1 .364-.606z"/>
+                                    <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1"/>
+                                  </svg>
+                                <%= element.nome %>
+
+                            </div>
+                            <div class="col-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-file-word" viewBox="0 0 16 16">
+                                    <path d="M4.879 4.515a.5.5 0 0 1 .606.364l1.036 4.144.997-3.655a.5.5 0 0 1 .964 0l.997 3.655 1.036-4.144a.5.5 0 0 1 .97.242l-1.5 6a.5.5 0 0 1-.967.01L8 7.402l-1.018 3.73a.5.5 0 0 1-.967-.01l-1.5-6a.5.5 0 0 1 .364-.606z"/>
+                                    <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1"/>
+                                  </svg>
+                                <%= element.nome %>
+
+                            </div>
+
+
+                        <% }) %>
+
+
+                        <% }else{ %>
+                            <p>Não foi possivel acessar os documentos</p>
+                                <% } %>
+                </div>
             </div>
         </div>
     </div>
-    <div class="row"><div class="col">Painel de Comandos</div></div>
-    <div class="row"><div class="col">Comandos e ações</div></div>
+    <div class="row">
+        <div class= "btn-group col-12">
+            <button class="btn btn-outline-secondary ">Vincular Cliente</button>
+            <button class="btn btn-outline-secondary ">Adicionar arquivos</button></div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12" id="vincular-cliente" style="display: none;">
+            <div class="form-group">
+                <form action="/client-add" method="post">
+                    <input type="number" name="project_id" readonly value="<%= projeto.id %>" hidden>
+                    <label class="form-label" for="cliente">Escolha o cliente do projeto:</label>
+                    <select class="form-control" name="cliente" id="">
+                        <option >Selecione usuário:</option>
+                        <% if(locals.users){%>
+                            <% users.forEach((elem)=>{%>
+                               <option value="<%=elem.id%>"><%=elem.nome%></option>
+                           <% }) %>
+                        <%}else{%>
+                            <option> Algo deu errado</option>
+                       <% } %>
+                    </select>
+                    <button class="btn btn-outline-primary col-12 mt-2">Vincular</button>
+                </form>
+
+            </div>
+
+        </div>
+        <div class="col-12" id="adicionar-arquivos">Adicionar</div>
+
+
+    </div>
 
 
     </div>
 </div>
 
+<div class="col">
+    <div clas="section-edit" id="adicionar-link">
+        <form action="/link-add" method="post">
+            <input name="id" type="number" readonly value="<%=projeto.id%>" >
 
-<div class="container">
+            <label for="type">Tipo de documento</label>
+            <select name="type" id="type">
+                <option selected >...</option>
+                <option value="spreadsheet">Tabela</option>
+                <option value="imagens">Imagens</option>
+                <option value="documentos">Documentos do projeto</option>
+                <option value="arquivos">Arquivos de projeto</option>
+            </select>
+            <label for="nomelink">Nome</label>
+            <input type="text" id="nomelink" name="nomelink"required>
+            <label for="link">Link</label>
+            <input type="text" name="link" id="link">
+            <label for="obslink">Observação</label>
+            <input type="text" name="obslink" id="obslink">
+            <label for="type">Tipo de documento</label>
+            <select name="type" id="type">
+                <option selected >...</option>
+                <option value="spreadsheet">Tabela</option>
+                <option value="imagens">Imagens</option>
+                <option value="documentos">Documentos do projeto</option>
+                <option value="arquivos">Arquivos de projeto</option>
+            </select>
+            <label for="nomelink">Nome</label>
+            <input type="text" id="nomelink" name="nomelink"required>
+            <label for="link">Link</label>
+            <input type="text" name="link" id="link">
+            <label for="obslink">Observação</label>
+            <input type="text" name="obslink" id="obslink">
+            <input type="submit" value="Enviar">
+        </form>
+        <button>Acrescentar outro</button>
 
-    <% if(locals.projeto){%>
-        <p>
-            <%=projeto.nome%>
 
-        </p>
-        <p><%=projeto.finalidade%></p>
-        <p><%=projeto.endereco%></p>
-        <ul>
-            <li><button class="button-link" id="vincular-cliente-button"> Vincular cliente</button></li>
-            <li><button class="button-link" id="edit-form-button"> Editar dados de projeto</button></li>
-            <li><button class="button-link" id="adicionar-link-button"> Adicionar arquivos de projeto</button></li>
-            <li><button class="button-link" id="voltar"> Voltar</button></li>
-        </ul>
+        form para adicionar links
+
+    </div>
+
 </div>
 
-<section id="vincular-cliente" style="display: none;">
-    <form action="/client-add" method="post">
-        <input type="number" name="project_id" readonly value="<%= projeto.id %>">
-        <label for="cliente">Escolha o cliente do projeto</label>
-        <select name="cliente" id="">
-            <option >Selecione usuário:</option>
-            <% if(locals.users){%>
-                <% users.forEach((elem)=>{%>
-                   <option value="<%=elem.id%>"><%=elem.nome%></option>
-               <% }) %>
-            <%}else{%>
-                <option> Algo deu errado</option>
-           <% } %>
-        </select>
-        <button>Vincular</button>
-    </form>
 
-
-</section>
-
-<div class="container">
+<!--Div comentada de editar projeto, para se fazer depois-->
+<!-- <div class="container">
     <div class="row">
         <section clas="section-edit" id="edit-form" style="display: none;">
 
@@ -233,103 +309,16 @@
         </div>
         </section>
 
-        <div class="col">
-            <div clas="section-edit" id="adicionar-link" style="display: none;">
-                <form action="/link-add" method="post">
-                    <input name="id" type="number" readonly value="<%=projeto.id%>" >
-
-                    <label for="type">Tipo de documento</label>
-                    <select name="type" id="type">
-                        <option selected >...</option>
-                        <option value="spreadsheet">Tabela</option>
-                        <option value="imagens">Imagens</option>
-                        <option value="documentos">Documentos do projeto</option>
-                        <option value="arquivos">Arquivos de projeto</option>
-                    </select>
-                    <label for="nomelink">Nome</label>
-                    <input type="text" id="nomelink" name="nomelink"required>
-                    <label for="link">Link</label>
-                    <input type="text" name="link" id="link">
-                    <label for="obslink">Observação</label>
-                    <input type="text" name="obslink" id="obslink">
-                    <label for="type">Tipo de documento</label>
-                    <select name="type" id="type">
-                        <option selected >...</option>
-                        <option value="spreadsheet">Tabela</option>
-                        <option value="imagens">Imagens</option>
-                        <option value="documentos">Documentos do projeto</option>
-                        <option value="arquivos">Arquivos de projeto</option>
-                    </select>
-                    <label for="nomelink">Nome</label>
-                    <input type="text" id="nomelink" name="nomelink"required>
-                    <label for="link">Link</label>
-                    <input type="text" name="link" id="link">
-                    <label for="obslink">Observação</label>
-                    <input type="text" name="obslink" id="obslink">
-                    <input type="submit" value="Enviar">
-                </form>
-                <button>Acrescentar outro</button>
 
 
-                form para adicionar links
-
-            </div>
-            <div id="actual-documents" style="display: none;">
-                <p>
-                    Documentos atuais
-                </p>
-                <div>
-                    <% if(locals.documentos){ %>
-                        <ul>
-                            <li>Fotos</li>
-                            <% documentos.arrayImagens.forEach((element)=>{%>
-                                <li><%=element.link%></li>
-                           <% })  %>
-                        </ul>
-
-                        <% } %>
-                </div>
-
-
-            </div>
-
-        </div>
 
     </div>
 
-</div>
-</section>
-
-
-<% }else{%>
-    <p>Ooops, algo deu errado</p>
-<%} %>
-
+</div>-->
 
 
 <%- include('partials/footer.ejs') %>
 
 <script>
-        $(".button-link").on("click",function(){
-        let lastClicked = null
-        let clicked =this.id
-        let lenghtWord = clicked.length
-        let word = clicked.substr(0,(lenghtWord-7))
-        let order = $("#" + word+"")
-        console.log(order)
-        console.log(lastClicked)
-        if(lastClicked){
-            console.log("existe")
-            lastClicked.toggle()
-        }
-        order.toggle()
-        lastClicked = order
-        console.log(lastClicked)
-        // $(".section-edit").css("display:none")
-        // $("#"+order+"").toggle()
-
-    });
-
-
 
 </script>
