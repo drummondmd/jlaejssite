@@ -1,221 +1,376 @@
 <%- include('partials/header.ejs') %>
 
-<style>
-    body{
-        background-color: aliceblue;
-    }
-</style>
-<div class="row m-4"></div>
+    <style>
+        body {
+            background-color: aliceblue;
+        }
 
-<div class="row">
-    <div class="col-2 mt-2">
-        <ul class="nav nav-pills nav-fill flex-column bg-light rounded">
-            <li class="nav-item"><a class="nav-link" href="/admin/home">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="/admin/usuarios">Usuarios</a></li>
-            <li class="nav-item"><a href="/admin/projetos" class="nav-link">Projetos</a></li>
-            <li class="nav-item"><a href="/admin/orcamentos" class="nav-link">Orçamentos</a></li>
-            <li class="nav-item"><a href="/logout" class="nav-link">Sair</a></li>
-    </div>
-    <div class="col-9 mt-2" style="background-color: beige;">
+        img {
+            max-height: 360px;
+            width: 100%;
+            object-fit: scale-down
+        }
+
+        #container-dados {
+            min-height: 413.600px;
+        }
+    </style>
+    <!--div fantasma para melhorar layout-->
+    <div class="row m-4"></div>
+
     <div class="row">
-        <div class="col-6">
-            <% if(locals.projeto){%>
-                <p class="h3"><%=projeto.nome%></p>
-                <p ><%=projeto.finalidade%>,<%=projeto.cidade%></p>
-                <p ><%=projeto.endereco%></p>
-                <p ><%=projeto.status%></p>
-
-            <% }else{ %>
-                <p>Algo deu errado ao renderizar projeto</p>
-                <% } %>
-
+        <!--Barra de nav-->
+        <div class="col-2 mt-2">
+            <ul class="nav nav-pills nav-fill flex-column bg-light rounded">
+                <li class="nav-item"><a class="nav-link" href="/admin/home">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/admin/usuarios">Usuarios</a></li>
+                <li class="nav-item"><a href="/admin/projetos" class="nav-link">Projetos</a></li>
+                <li class="nav-item"><a href="/admin/orcamentos" class="nav-link">Orçamentos</a></li>
+                <li class="nav-item"><a href="/logout" class="nav-link">Sair</a></li>
+            </ul>
         </div>
-        <div class="col-6">
-            <div class="row">
-                <div class="col m-2 btn-group">
-                    <button type="button" class="btn btn-outline-secondary">Etapas</button>
-                    <button type="button" class="btn btn-outline-secondary">Fotos</button>
-                    <button type="button" class="btn btn-outline-secondary">Documentos</button>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12" id="fotos-projeto" style="display: none;">
-                    Fotos
+        <!--container-->
+        <div class="col-9 mt-2" style="background-color: beige;">
 
-                </div>
-                <div class="col-12" id="etapas-projeto" style="display: none;">
-                    <table class="table table-striped">
-                        <thead class="thead-light">
-                            <tr>
-                                <th>Etapa:</th>
-                                <th>Dias faltantes</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% if(locals.etapas){ %>
-                                <% if(etapas.length == 0){ %>
-                                    <tr>
-                                        <td colspan="3">Nenhuma etapa registrada</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="3">
-                                            <button id="finalizar-projeto" type="button" class="btn btn-success col-12">Finalizar Projeto</button>
-                                        </td>
-                                    </tr>
-                                    <% }else{ %>
-
-                                <%etapas.forEach(element => {%>
-                                    <tr>
-                                        <td><%=element.nome_etapa%></td>
-                                        <td><%=element.dpe%></td>
-                                        <td>
-                                            <form action="/atualizar-etapas/<%=element.id%>" method="post">
-                                                <select name="status" id="status" class="form-select" onchange="this.form.submit()">
-                                                    <option value="<%= element.status %>" selected><%= element.status %></option>
-                                                    <option value="Finalizado">Finalizado</option>
-                                                    <option value="Em aberto">Em aberto</option>
-
-                                                </select>
-
-                                            </form>
-                                        </td>
-                                    </tr>
-                                <%}); %>
-                                <tr>
-                                    <td colspan="3">
-                                        <button id="finalizar-projeto" type="button" class="btn btn-success col-12">Finalizar Projeto</button>
-                                    </td>
-                                </tr>
-                                <% } %>
-
-                            <% }else{ %>
-
-                            <tr>
-                                <td colspan="4">Nenhuma etapa do projeto registrada</td>
-                            </tr>
-
-                            <% } %>
-
-                        </tbody>
-                    </table>
-
-                </div>
-                <div class="col-12" id="documentos-projeto">
-                    <% if(locals.documentos){ %>
-                        <% documentos.arrayDocumentos.forEach(element => { %>
-                            <div class="col-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-file-word" viewBox="0 0 16 16">
-                                    <path d="M4.879 4.515a.5.5 0 0 1 .606.364l1.036 4.144.997-3.655a.5.5 0 0 1 .964 0l.997 3.655 1.036-4.144a.5.5 0 0 1 .97.242l-1.5 6a.5.5 0 0 1-.967.01L8 7.402l-1.018 3.73a.5.5 0 0 1-.967-.01l-1.5-6a.5.5 0 0 1 .364-.606z"/>
-                                    <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1"/>
-                                  </svg>
-                                <%= element.nome %>
-
-                            </div>
-                            <div class="col-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-file-word" viewBox="0 0 16 16">
-                                    <path d="M4.879 4.515a.5.5 0 0 1 .606.364l1.036 4.144.997-3.655a.5.5 0 0 1 .964 0l.997 3.655 1.036-4.144a.5.5 0 0 1 .97.242l-1.5 6a.5.5 0 0 1-.967.01L8 7.402l-1.018 3.73a.5.5 0 0 1-.967-.01l-1.5-6a.5.5 0 0 1 .364-.606z"/>
-                                    <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1"/>
-                                  </svg>
-                                <%= element.nome %>
-
-                            </div>
-
-
-                        <% }) %>
-
+            <div class="row" id="container-dados">
+                <!--dados basicos-->
+                <div class="col-5">
+                    <% if(locals.projeto){%>
+                        <p class="h3">
+                            <%=projeto.nome%>
+                        </p>
+                        <p>
+                            <%=projeto.finalidade%>,<%=projeto.cidade%>
+                        </p>
+                        <p>
+                            <%=projeto.endereco%>
+                        </p>
+                        <p>
+                            <%=projeto.status%>
+                        </p>
 
                         <% }else{ %>
-                            <p>Não foi possivel acessar os documentos</p>
-                                <% } %>
+                            <p>Algo deu errado ao renderizar projeto</p>
+                            <% } %>
+
+                </div>
+                <!--doc,img,fotos-->
+                <div class="col-7">
+                    <!--Seletores-->
+                    <div class="row">
+                        <div class="m-2 btn-group">
+                            <button type="button" class="btn btn-outline-secondary" id="etapasBtn">Etapas</button>
+                            <button type="button" class="btn btn-outline-secondary" id="fotosBtn">Fotos</button>
+                            <button type="button" class="btn btn-outline-secondary"
+                                id="documentosBtn">Documentos</button>
+                        </div>
+                    </div>
+                    <!--dados de fotos, docs,img-->
+
+                    <div class="row">
+                        <div class="col-12" id="fotos-projeto" style="display: none;">
+                            <div class="container">
+                                <div id="carouselExample" class="carousel slide">
+                                    <div class="carousel-inner">
+                                        <%if(locals.documentos){%>
+                                            <% if(documentos.arrayImagens.length==0){%>
+                                                <div class="carousel-item active">
+                                                    <img src="https://reboucasbrasil.com.br/wp-content/themes/consultix/images/no-image-found-360x260.png"
+                                                        class="d-block w-100" alt="...">
+                                                </div>
+                                                <%}else{ %>
+                                                    <% documentos.arrayImagens.forEach((element,index)=> { %>
+                                                        <% if(index==0 ){ %>
+                                                            <div class="carousel-item active">
+                                                                <img src="<%=element.link%>" class="d-block w-100"
+                                                                    alt="...">
+                                                            </div>
+                                                            <% }else{ %>
+                                                                <div class="carousel-item">
+                                                                    <img src="<%=element.link%>" class="d-block w-100"
+                                                                        alt="...">
+                                                                </div>
+
+                                                                <% } %>
+                                                                    <% }) %>
+                                                                        <% } %>
+                                                                            <% } %>
+
+                                    </div>
+                                    <button class="carousel-control-prev" type="button"
+                                        data-bs-target="#carouselExample" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button"
+                                        data-bs-target="#carouselExample" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Next</span>
+                                    </button>
+
+                                </div>
+
+
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-12" id="etapas-projeto">
+                            <table class="table table-striped">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Etapa:</th>
+                                        <th>Dias faltantes</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% if(locals.etapas){ %>
+                                        <% if(etapas.length==0){ %>
+                                            <tr>
+                                                <td colspan="3">Nenhuma etapa registrada</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3">
+                                                    <button id="finalizar-projeto" type="button"
+                                                        class="btn btn-success col-12">Finalizar
+                                                        Projeto</button>
+                                                </td>
+                                            </tr>
+                                            <% }else{ %>
+
+                                                <%etapas.forEach(element=> {%>
+                                                    <tr>
+                                                        <td>
+                                                            <%=element.nome_etapa%>
+                                                        </td>
+                                                        <td>
+                                                            <%=element.dpe%>
+                                                        </td>
+                                                        <td>
+                                                            <form action="/atualizar-etapas/<%=element.id%>"
+                                                                method="post">
+                                                                <select name="status" id="status" class="form-select"
+                                                                    onchange="this.form.submit()">
+                                                                    <option value="<%= element.status %>" selected>
+                                                                        <%= element.status %>
+                                                                    </option>
+                                                                    <option value="Finalizado">Finalizado
+                                                                    </option>
+                                                                    <option value="Em aberto">Em aberto</option>
+
+                                                                </select>
+
+                                                            </form>
+                                                        </td>
+                                                    </tr>
+                                                    <%}); %>
+                                                        <tr>
+                                                            <td colspan="3">
+                                                                <button id="finalizar-projeto" type="button"
+                                                                    class="btn btn-success col-12">Finalizar
+                                                                    Projeto</button>
+                                                            </td>
+                                                        </tr>
+                                                        <% } %>
+
+                                                            <% }else{ %>
+
+                                                                <tr>
+                                                                    <td colspan="4">Nenhuma etapa do projeto
+                                                                        registrada
+                                                                    </td>
+                                                                </tr>
+
+                                                                <% } %>
+
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                        <div class="col-12" id="documentos-projeto" style="display: none;">
+                            <% if(locals.documentos){ %>
+                                <% if(documentos.arrayDocumentos.length==0){%>
+                                    <% if(documentos.arraySpreadsheet.length==0){%>
+                                        <h4 class="h4">Nenhum documento cadastrado até o momento.</h3>
+                                            <% } %>
+                                                <% } %>
+
+
+                                                    <div class="row">
+                                                        <!--Documentos-->
+                                                        <% documentos.arrayDocumentos.forEach(element=> { %>
+                                                            <div class="col-4 m-2 text-center">
+                                                                <a href='<%=element.link%>'>
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="48"
+                                                                        height="48" fill="currentColor"
+                                                                        class="bi bi-file-word mx-auto d-block"
+                                                                        viewBox="0 0 16 16">
+                                                                        <path
+                                                                            d="M4.879 4.515a.5.5 0 0 1 .606.364l1.036 4.144.997-3.655a.5.5 0 0 1 .964 0l.997 3.655 1.036-4.144a.5.5 0 0 1 .97.242l-1.5 6a.5.5 0 0 1-.967.01L8 7.402l-1.018 3.73a.5.5 0 0 1-.967-.01l-1.5-6a.5.5 0 0 1 .364-.606z" />
+                                                                        <path
+                                                                            d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1" />
+                                                                    </svg>
+                                                                    <p>
+                                                                        <%= element.nome %>
+                                                                    </p>
+                                                                </a>
+                                                            </div>
+                                                            <% }) %>
+
+                                                                <!--spreadsheet-->
+                                                                <% documentos.arraySpreadsheet.forEach(element=> { %>
+                                                                    <div class="col-4 m-2 text-center">
+                                                                        <a href='<%=element.link%>'>
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                width="48" height="48"
+                                                                                fill="currentColor"
+                                                                                class="bi bi-table mx-auto d-block"
+                                                                                viewBox="0 0 16 16">
+                                                                                <path
+                                                                                    d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 2h-4v3h4zm0 4h-4v3h4zm0 4h-4v3h3a1 1 0 0 0 1-1zm-5 3v-3H6v3zm-5 0v-3H1v2a1 1 0 0 0 1 1zm-4-4h4V8H1zm0-4h4V4H1zm5-3v3h4V4zm4 4H6v3h4z" />
+                                                                            </svg>
+                                                                            <p>
+                                                                                <%= element.nome %>
+                                                                            </p>
+                                                                        </a>
+                                                                    </div>
+                                                                    <% }) %>
+                                                                        <!--spreadsheet-->
+                                                                        <% documentos.arrayArquivos.forEach(element=> {
+                                                                            %>
+                                                                            <div class="col-4 m-2 text-center">
+                                                                                <a href='<%=element.link%>'>
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                        width="48" height="48"
+                                                                                        fill="currentColor"
+                                                                                        class="bi bi-clipboard mx-auto d-block"
+                                                                                        viewBox="0 0 16 16">
+                                                                                        <path
+                                                                                            d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z" />
+                                                                                        <path
+                                                                                            d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z" />
+                                                                                    </svg>
+                                                                                    <p>
+                                                                                        <%= element.nome %>
+                                                                                    </p>
+                                                                                </a>
+                                                                            </div>
+                                                                            <% }) %>
+
+
+
+
+
+                                                    </div>
+                                                    <% }else{ %>
+                                                        <p>Não foi possivel acessar os
+                                                            documentos</p>
+
+                                                        <% } %>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class= "btn-group col-12">
-            <button class="btn btn-outline-secondary ">Vincular Cliente</button>
-            <button class="btn btn-outline-secondary ">Adicionar arquivos</button></div>
-    </div>
+            <div class="row my-4">
+                <div class="btn-group col-12">
+                    <button class="btn btn-outline-secondary ">Vincular Cliente</button>
+                    <button class="btn btn-outline-secondary ">Adicionar arquivos</button>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row" id="vincular">
+                    <div class="col-12" id="vincular-cliente">
+                        <div class="form-group">
+                            <form action="/client-add" method="post">
+                                <input type="number" name="project_id" readonly value="<%= projeto.id %>" hidden>
+                                <label class="form-label" for="cliente">Escolha o cliente do projeto:</label>
+                                <select class="form-control" name="cliente" id="">
+                                    <option>Selecione usuário:</option>
+                                    <% if(locals.users){%>
+                                        <% users.forEach((elem)=>{%>
+                                            <option value="<%=elem.id%>">
+                                                <%=elem.nome%>
+                                            </option>
+                                            <% }) %>
+                                                <%}else{%>
+                                                    <option> Algo deu errado</option>
+                                                    <% } %>
+                                </select>
+                                <button class="btn btn-outline-primary col-12 mt-2">Vincular</button>
+                            </form>
 
-    <div class="row mt-4">
-        <div class="col-12" id="vincular-cliente" style="display: none;">
-            <div class="form-group">
-                <form action="/client-add" method="post">
-                    <input type="number" name="project_id" readonly value="<%= projeto.id %>" hidden>
-                    <label class="form-label" for="cliente">Escolha o cliente do projeto:</label>
-                    <select class="form-control" name="cliente" id="">
-                        <option >Selecione usuário:</option>
-                        <% if(locals.users){%>
-                            <% users.forEach((elem)=>{%>
-                               <option value="<%=elem.id%>"><%=elem.nome%></option>
-                           <% }) %>
-                        <%}else{%>
-                            <option> Algo deu errado</option>
-                       <% } %>
-                    </select>
-                    <button class="btn btn-outline-primary col-12 mt-2">Vincular</button>
-                </form>
+                        </div>
+
+                    </div>
+                    <div class="col-12" id="adicionar-arquivos">
+                        Adicionar arquivos -fazer depos
+                    </div>
+
+
+                </div>
+
 
             </div>
 
         </div>
-        <div class="col-12" id="adicionar-arquivos">Adicionar</div>
 
+    </div>
+
+    <!--forms novos-->
+
+    <!--forms antigos-->
+
+    <div class="col">
+        <div clas="section-edit" id="adicionar-link">
+            <form action="/link-add" method="post">
+                <input name="id" type="number" readonly value="<%=projeto.id%>">
+
+                <label for="type">Tipo de documento</label>
+                <select name="type" id="type">
+                    <option selected>...</option>
+                    <option value="spreadsheet">Tabela</option>
+                    <option value="imagens">Imagens</option>
+                    <option value="documentos">Documentos do projeto</option>
+                    <option value="arquivos">Arquivos de projeto</option>
+                </select>
+                <label for="nomelink">Nome</label>
+                <input type="text" id="nomelink" name="nomelink" required>
+                <label for="link">Link</label>
+                <input type="text" name="link" id="link">
+                <label for="obslink">Observação</label>
+                <input type="text" name="obslink" id="obslink">
+                <label for="type">Tipo de documento</label>
+                <select name="type" id="type">
+                    <option selected>...</option>
+                    <option value="spreadsheet">Tabela</option>
+                    <option value="imagens">Imagens</option>
+                    <option value="documentos">Documentos do projeto</option>
+                    <option value="arquivos">Arquivos de projeto</option>
+                </select>
+                <label for="nomelink">Nome</label>
+                <input type="text" id="nomelink" name="nomelink" required>
+                <label for="link">Link</label>
+                <input type="text" name="link" id="link">
+                <label for="obslink">Observação</label>
+                <input type="text" name="obslink" id="obslink">
+                <input type="submit" value="Enviar">
+            </form>
+            <button>Acrescentar outro</button>
+
+
+            form para adicionar links
+
+        </div>
 
     </div>
 
 
-    </div>
-</div>
-
-<div class="col">
-    <div clas="section-edit" id="adicionar-link">
-        <form action="/link-add" method="post">
-            <input name="id" type="number" readonly value="<%=projeto.id%>" >
-
-            <label for="type">Tipo de documento</label>
-            <select name="type" id="type">
-                <option selected >...</option>
-                <option value="spreadsheet">Tabela</option>
-                <option value="imagens">Imagens</option>
-                <option value="documentos">Documentos do projeto</option>
-                <option value="arquivos">Arquivos de projeto</option>
-            </select>
-            <label for="nomelink">Nome</label>
-            <input type="text" id="nomelink" name="nomelink"required>
-            <label for="link">Link</label>
-            <input type="text" name="link" id="link">
-            <label for="obslink">Observação</label>
-            <input type="text" name="obslink" id="obslink">
-            <label for="type">Tipo de documento</label>
-            <select name="type" id="type">
-                <option selected >...</option>
-                <option value="spreadsheet">Tabela</option>
-                <option value="imagens">Imagens</option>
-                <option value="documentos">Documentos do projeto</option>
-                <option value="arquivos">Arquivos de projeto</option>
-            </select>
-            <label for="nomelink">Nome</label>
-            <input type="text" id="nomelink" name="nomelink"required>
-            <label for="link">Link</label>
-            <input type="text" name="link" id="link">
-            <label for="obslink">Observação</label>
-            <input type="text" name="obslink" id="obslink">
-            <input type="submit" value="Enviar">
-        </form>
-        <button>Acrescentar outro</button>
-
-
-        form para adicionar links
-
-    </div>
-
-</div>
-
-
-<!--Div comentada de editar projeto, para se fazer depois-->
-<!-- <div class="container">
+    <!--Div comentada de editar projeto, para se fazer depois-->
+    <!-- <div class="container">
     <div class="row">
         <section clas="section-edit" id="edit-form" style="display: none;">
 
@@ -317,8 +472,25 @@
 </div>-->
 
 
-<%- include('partials/footer.ejs') %>
+    <%- include('partials/footer.ejs') %>
 
-<script>
+        <script>
+            //grupo de botões
+            $("#etapasBtn").on("click", function () {
+                $("#etapas-projeto").show()
+                $("#documentos-projeto").hide()
+                $("#fotos-projeto").hide()
+            })
+            $("#fotosBtn").on("click", function () {
+                $("#etapas-projeto").hide()
+                $("#documentos-projeto").hide()
+                $("#fotos-projeto").show()
+            })
+            $("#documentosBtn").on("click", function () {
+                $("#etapas-projeto").hide()
+                $("#documentos-projeto").show()
+                $("#fotos-projeto").hide()
+            })
 
-</script>
+
+        </script>
