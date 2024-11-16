@@ -1,53 +1,178 @@
 <%- include('partials/header.ejs') %>
 
+    <style>
 
-<section id="header-exclusive">
-    <% if(locals.user){%>
-        <h1>
-            Seja bem Vindo <%= user.nome %> <%= user.sobrenome %> a sua area exclusiva.
-        </h1>
-        
-   <% } %>
-</section>
+        #perfil {
+            border-radius: 50%;
+        }
+        body>.container{
+            height: 75vh;
+        }
+    </style>
 
-</section>
+    <div class="container my-5 bg-secondary-subtle rounded">
+        <div class="row h-100">
+            <div class="col-md-4 h-100 d-flex align-items-center">
+                <div class="row">
 
-<section id="projetos">
-    <% if(locals.projetos){%>
-        <% if(projetos.length == 0){ %>
-            <p>
-                Voce ainda não tem projetos
-            </p>
-        <% }else{ %>
-
-        <% projetos.forEach(element =>{ %>
-            <a href="/detalhes-de-projeto/<%=element.id%>">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="card-title">
-                            <%= element.nome %>
-                        </div>
-                        <div class="card-subtitle">
-                            <%= element.endereco %>
-                        </div>
-                        <div class="card-subtitle">
-                            <%= element.finalidade %>
-                        </div>
+                    <div class="col-12 d-flex justify-content-center">
+                        <% if(locals.user){%>
+                            <% if(user.foto){ %>
+                                <img id="perfil" src="<%=user.foto%>" alt="" width="200px">
+                                <% }else{ %>
+                                    <img id="perfil"
+                                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzIdr7HcfjPdwSAGPtaGRxlaM7d-PaAJdX9Q&s"
+                                        alt="" width="200px">
+                                    <% } %>
+                                        <% } %>
                     </div>
+                    <div class="col-12 text-center">
+                        <% if(locals.user){%>
+                            <h3 class="h3">Seja bem Vindo,</h3>
+                            <h3 class="h2">
+                                <%= user.nome %>
+                                    <%= user.sobrenome %>
+                            </h3>
+                            <h3 class="h3">a sua area exclusiva.</h3>
+                    </div>
+                    <% } %>
+
                 </div>
 
 
 
-            </a> 
+            </div>
+            <div class="col-md-8">
+                <div class="row h-50">
+                    <div class="col-12 h-50">
+                        <h1 class="display-6">Projetos atuais</h1>
+                        <div class="row">
+                            <% if(locals.atuais){%>
+                                <% if(atuais.length==0){ %>
+                                    <p>
+                                        Voce ainda não tem projetos
+                                    </p>
+                                    <% }else{ %>
 
-       <%}) %>
+                                        <% atuais.forEach(element=>{ %>
 
-        <% } %>
-        <% } %>
+                                            <div class="card m-2" style="width: 18rem;">
+                                                <a href="/detalhes-de-projeto/<%=element.project_id%>">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">
+                                                            <%= element.nome %>
+                                                        </h5>
+                                                        <p class="card-text mb-2 text-body-secondary">
+                                                            <%= element.finalidade %>
+                                                        </p>
+                                                        <p class="card-subtitle">
+                                                            <%= element.endereco %>
+                                                        </p>
+                                                    </div>
+                                                </a>
+                                            </div>
 
 
-</section>
+
+                                            <%}) %>
+                        </div>
+
+                        <% } %>
+                            <% } %>
+                    </div>
+
+
+                </div>
+                <div class="col-12">
+                    <h1 class="display-6">Projetos finalizados</h1>
+                    <div class="row">
+                        <% if(locals.finalizados){%>
+                            <% if(finalizados.length==0){ %>
+                                <p>
+                                    Voce ainda não tem projetos
+                                </p>
+                                <% }else{ %>
+
+                                    <% finalizados.forEach(element=>{ %>
+
+                                        <div class="card m-2" style="width: 18rem;">
+                                            <a href="/detalhes-de-projeto/<%=element.id%>">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">
+                                                        <%= element.nome %>
+                                                    </h5>
+                                                    <p class="card-text mb-2 text-body-secondary">
+                                                        <%= element.finalidade %>
+                                                    </p>
+                                                    <p class="card-subtitle">
+                                                        <%= element.endereco %>
+                                                    </p>
+                                                </div>
+                                            </a>
+                                        </div>
 
 
 
-<%- include('partials/footer.ejs') %>
+                                        <%}) %>
+                    </div>
+
+                    <% } %>
+                        <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+
+
+
+    <!--Antigos-->
+
+    <div style="display: none;">
+
+        <section id="header-exclusive">
+
+
+        </section>
+
+        <section id="projetos">
+            <% if(locals.projetos){%>
+                <% if(projetos.length==0){ %>
+                    <p>
+                        Voce ainda não tem projetos
+                    </p>
+                    <% }else{ %>
+
+                        <% projetos.forEach(element=>{ %>
+                            <a href="/detalhes-de-projeto/<%=element.id%>">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="card-title">
+                                            <%= element.nome %>
+                                        </div>
+                                        <div class="card-subtitle">
+                                            <%= element.endereco %>
+                                        </div>
+                                        <div class="card-subtitle">
+                                            <%= element.finalidade %>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+
+                            <%}) %>
+
+                                <% } %>
+                                    <% } %>
+
+
+        </section>
+    </div>
+
+
+
+
+
+    <%- include('partials/footer.ejs') %>

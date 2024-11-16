@@ -112,22 +112,48 @@ app.get("/admin/:route", async (req, res) => {
 })
 
 app.get("/clientes", async (req, res) => {
-    const user = req.user
-
+    let user = req.user
+    // const teste = {
+    //     id: 3,
+    //     nome: 'João ',
+    //     sobrenome: 'Sem braço',
+    //     nascimento: '2024-06-04T03:00:00.000Z',
+    //     sexo: 'masculino',
+    //     senha: '$2b$10$0gdTp1ZeAd4yA6sqcT16aOxw7rzgXWBj.F42j53qX5Z3vJfH2H8gu',
+    //     email: 'joao@gmail.com',
+    //     administrador: false,
+    //     foto: 'https://lh3.googleusercontent.com/a/ACg8ocLPJR4HdCOI60lCLZTXHY8uPeCv9yt7K-9xwN9hCHOo2gtHzgg=s360-c-no',
+    //     tel: null
+    // };
     if (user == undefined) {
         res.redirect("/login")
 
     } else {
-        const userId = req.user.id
-        const projetos = await getProjectFromClient(userId)
-        res.render("cliente.ejs", { user: user, projetos: projetos })
+        const userId = user.id
+        const array = await getProjectFromClient(userId)
+        const atuais = array.filter((element) => element.status == "Em andamento")
+        const finalizados = array.filter((element) => element.status == "Finalizado")
+        res.render("cliente.ejs", { user: user, atuais: atuais,finalizados:finalizados })
     }
 
 })
 
 app.get("/detalhes-de-projeto/:id", async (req, res) => {
-    const projectId = req.params.id
-    const user = req.user
+    const projectId = req.params.id;
+        const teste = {
+        id: 3,
+        nome: 'João ',
+        sobrenome: 'Sem braço',
+        nascimento: '2024-06-04T03:00:00.000Z',
+        sexo: 'masculino',
+        senha: '$2b$10$0gdTp1ZeAd4yA6sqcT16aOxw7rzgXWBj.F42j53qX5Z3vJfH2H8gu',
+        email: 'joao@gmail.com',
+        administrador: false,
+        foto: 'https://lh3.googleusercontent.com/a/ACg8ocLPJR4HdCOI60lCLZTXHY8uPeCv9yt7K-9xwN9hCHOo2gtHzgg=s360-c-no',
+        tel: null
+    };
+    let user = req.user
+    user =teste;
     if (user == undefined) {
         res.redirect("/clientes")
     } else {
@@ -144,6 +170,7 @@ app.get("/detalhes-de-projeto/:id", async (req, res) => {
             res.render("detalhado.ejs", { user: user, projeto: projeto, imagens: imagens, documentos: documentos, spreadsheet: spreadsheet, arquivos: arquivos })
 
         } else {
+            console.log("Segundo else")
             res.redirect("/clientes")
 
         }
@@ -172,6 +199,13 @@ app.get("/json/:natureza", async (req, res) => {
             break;
     }
 })
+
+app.get('/logout', function (req, res, next) {
+    req.logout(function (err) {
+        if (err) { return next(err); }
+        res.redirect('/');
+    });
+});
 
 
 // POST
@@ -345,7 +379,7 @@ app.post("/projeto-novo", async (req, res) => {
 })
 
 app.route("/editar-projeto")
-    .put(async (req,res)=>{
+    .put(async (req, res) => {
         const data = req.body
         try {
             await db.query("UPDATE projetos SET status = $1 WHERE id = $2", [data.status, parseInt(data.id)])
@@ -357,19 +391,19 @@ app.route("/editar-projeto")
         }
 
     })
-    .post (async (req, res) => {
-    const awnser = req.body
-    console.log(awnser)
-    try {
-        await db.query("UPDATE projetos SET nome = $1,endereco =$2,orcamento=$3,finalidade=$4,display=$5,ativo=$6,custo_obra=$7 WHERE id = $8", [awnser.nome, awnser.endereco, awnser.orcamento, awnser.finalidade, awnser.display, awnser.ativo, awnser.custo_obra, awnser.id])
-    } catch (error) {
-        res.send("Algum erro aconteceu na query")
-        console.log("erro ao inserir query", error)
-    }
+    .post(async (req, res) => {
+        const awnser = req.body
+        console.log(awnser)
+        try {
+            await db.query("UPDATE projetos SET nome = $1,endereco =$2,orcamento=$3,finalidade=$4,display=$5,ativo=$6,custo_obra=$7 WHERE id = $8", [awnser.nome, awnser.endereco, awnser.orcamento, awnser.finalidade, awnser.display, awnser.ativo, awnser.custo_obra, awnser.id])
+        } catch (error) {
+            res.send("Algum erro aconteceu na query")
+            console.log("erro ao inserir query", error)
+        }
 
-    res.redirect("/admin/projetos")
+        res.redirect("/admin/projetos")
 
-})
+    })
 
 app.post("/editar-orcamento/:id", async (req, res) => {
     const id = req.params.id
@@ -391,7 +425,7 @@ app.post("/link-add", async (req, res) => {
     const awnser = req.body;
     const url = req.header('Referer');
     let isArray = Array.isArray(awnser.nomelink)
-    if(isArray == true){
+    if (isArray == true) {
         awnser.nomelink.forEach((element, index) => {
             try {
                 db.query("INSERT INTO documentos (project_id,link,type,nome,obs) VALUES ($1,$2,$3,$4,$5)", [id, awnser.link[index], awnser.type[index], element, awnser.obslink[index] ? awnser.obslink[index] : null])
@@ -404,7 +438,7 @@ app.post("/link-add", async (req, res) => {
 
         });
         res.redirect(url)
-    }else{
+    } else {
         try {
             await db.query("INSERT INTO documentos (project_id,link,type,nome,obs) VALUES ($1,$2,$3,$4,$5)", [id, awnser.link, awnser.type, awnser.nomelink, awnser.obslink ? awnser.obslink : null])
 
@@ -479,10 +513,10 @@ app.post("/atualizar-etapas/:id", async (req, res) => {
     const status = req.body.status
     const url = req.header('Referer');
     try {
-        await db.query("UPDATE etapas SET status =$1 WHERE id = $2",[status,id])
+        await db.query("UPDATE etapas SET status =$1 WHERE id = $2", [status, id])
 
     } catch (error) {
-        console.log(error,"Erro ao atualizar etapas")
+        console.log(error, "Erro ao atualizar etapas")
 
     }
     res.redirect(url)
