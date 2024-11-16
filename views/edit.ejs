@@ -2,7 +2,7 @@
 
     <style>
         body {
-            background-color: aliceblue;
+            background-color: #e9eef6;
         }
 
         img {
@@ -20,8 +20,8 @@
 
     <div class="row">
         <!--Barra de nav-->
-        <div class="col-2 mt-2">
-            <ul class="nav nav-pills nav-fill flex-column bg-light rounded">
+        <div class="col-2 mt-2 mr-2 mb-4 pb-4 bg-light rounded ">
+            <ul class="nav nav-pills nav-fill flex-column d ">
                 <li class="nav-item"><a class="nav-link" href="/admin/home">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="/admin/usuarios">Usuarios</a></li>
                 <li class="nav-item"><a href="/admin/projetos" class="nav-link">Projetos</a></li>
@@ -30,7 +30,7 @@
             </ul>
         </div>
         <!--container-->
-        <div class="col-9 mt-2" style="background-color: beige;">
+        <div class="col-9 mt-2 mb-4 pb-4 bg-light rounded">
 
             <div class="row" id="container-dados">
                 <!--dados basicos-->
@@ -118,7 +118,7 @@
 
                         <div class="col-12" id="etapas-projeto">
                             <table class="table table-striped">
-                                <thead class="thead-light">
+                                <thead class="thead-light rounded">
                                     <tr>
                                         <th>Etapa:</th>
                                         <th>Dias faltantes</th>
@@ -277,13 +277,13 @@
             </div>
             <div class="row my-4">
                 <div class="btn-group col-12">
-                    <button class="btn btn-outline-secondary ">Vincular Cliente</button>
-                    <button class="btn btn-outline-secondary ">Adicionar arquivos</button>
+                    <button id="clienteBtn" class="btn btn-outline-secondary ">Vincular Cliente</button>
+                    <button id="adicionarBtn" class="btn btn-outline-secondary ">Adicionar arquivos</button>
                 </div>
             </div>
             <div class="container">
                 <div class="row" id="vincular">
-                    <div class="col-12" id="vincular-cliente">
+                    <div class="col-12" id="vincular-cliente" style="display: none;">
                         <div class="form-group">
                             <form action="/client-add" method="post">
                                 <input type="number" name="project_id" readonly value="<%= projeto.id %>" hidden>
@@ -306,8 +306,62 @@
                         </div>
 
                     </div>
-                    <div class="col-12" id="adicionar-arquivos">
-                        Adicionar arquivos -fazer depos
+                    <div class="col-12" id="adicionar-arquivos" style="display: none;">
+                        <div>
+                            <form action="/link-add" method="post">
+                                <input name="id" type="number" readonly value="<%=projeto.id%>" hidden>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="type" class="form-label">Tipo de documento</label>
+                                            <select class='form-control' name="type" id="type">
+                                                <option selected>...</option>
+                                                <option value="spreadsheet">Tabela</option>
+                                                <option value="imagens">Imagens</option>
+                                                <option value="documentos">Documentos do projeto</option>
+                                                <option value="arquivos">Arquivos de projeto</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="nomelink" class="form-label">Nome</label>
+                                            <input type="text" id="nomelink" name="nomelink" required
+                                                class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="link" class="form-label">Link</label>
+                                            <input type="text" name="link" id="link" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="obslink" class="form-label">Observação</label>
+                                            <input type="text" name="obslink" id="obslink" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 p-4">
+                                        <hr>
+                                    </div>
+                                </div>
+                                <div class="row" id="jquery-link">
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <button type="button" id="add-link" class="btn btn-link col-12"> Adicionar outro
+                                            link</button>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-outline-primary col-12">Enviar link(s)</button>
+
+
+
+                        </div>
+                        </form>
+
                     </div>
 
 
@@ -315,54 +369,6 @@
 
 
             </div>
-
-        </div>
-
-    </div>
-
-    <!--forms novos-->
-
-    <!--forms antigos-->
-
-    <div class="col">
-        <div clas="section-edit" id="adicionar-link">
-            <form action="/link-add" method="post">
-                <input name="id" type="number" readonly value="<%=projeto.id%>">
-
-                <label for="type">Tipo de documento</label>
-                <select name="type" id="type">
-                    <option selected>...</option>
-                    <option value="spreadsheet">Tabela</option>
-                    <option value="imagens">Imagens</option>
-                    <option value="documentos">Documentos do projeto</option>
-                    <option value="arquivos">Arquivos de projeto</option>
-                </select>
-                <label for="nomelink">Nome</label>
-                <input type="text" id="nomelink" name="nomelink" required>
-                <label for="link">Link</label>
-                <input type="text" name="link" id="link">
-                <label for="obslink">Observação</label>
-                <input type="text" name="obslink" id="obslink">
-                <label for="type">Tipo de documento</label>
-                <select name="type" id="type">
-                    <option selected>...</option>
-                    <option value="spreadsheet">Tabela</option>
-                    <option value="imagens">Imagens</option>
-                    <option value="documentos">Documentos do projeto</option>
-                    <option value="arquivos">Arquivos de projeto</option>
-                </select>
-                <label for="nomelink">Nome</label>
-                <input type="text" id="nomelink" name="nomelink" required>
-                <label for="link">Link</label>
-                <input type="text" name="link" id="link">
-                <label for="obslink">Observação</label>
-                <input type="text" name="obslink" id="obslink">
-                <input type="submit" value="Enviar">
-            </form>
-            <button>Acrescentar outro</button>
-
-
-            form para adicionar links
 
         </div>
 
@@ -491,6 +497,78 @@
                 $("#documentos-projeto").show()
                 $("#fotos-projeto").hide()
             })
+            //
+            $("#clienteBtn").on("click", function () {
+                $("#vincular-cliente").show()
+                $("#adicionar-arquivos").hide()
+            })
+            $("#adicionarBtn").on("click", function () {
+                $("#vincular-cliente").hide()
+                $("#adicionar-arquivos").show()
+            })
 
+            //adicionar links a Mais
+            $("#add-link").on("click", function () {
+                let html = `                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="type" class="form-label">Tipo de documento</label>
+                                            <select class='form-control' name="type" id="type">
+                                                <option selected>...</option>
+                                                <option value="spreadsheet">Tabela</option>
+                                                <option value="imagens">Imagens</option>
+                                                <option value="documentos">Documentos do projeto</option>
+                                                <option value="arquivos">Arquivos de projeto</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="nomelink" class="form-label">Nome</label>
+                                            <input type="text" id="nomelink" name="nomelink" required
+                                                class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="link" class="form-label">Link</label>
+                                            <input type="text" name="link" id="link" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="obslink" class="form-label">Observação</label>
+                                            <input type="text" name="obslink" id="obslink" class="form-control">
+                                        </div>
+                                    </div>
+                                                                        <div class="col-12 p-4">
+                                        <hr>
+                                    </div>
 
+                                    `
+                $("#jquery-link").append(html)
+            })
+            ///
+            $("#finalizar-projeto").on("click", function () {
+                let id = $('input[name="id"]').val();
+                var rep = confirm("Confirma que projeto está finalizado?");
+                console.log(rep);
+                if (rep) {
+                    $.ajax({
+                        type: "PUT",
+                        url: '/editar-projeto',
+                        data: { id: id, status: "Finalizado" },
+                        success: function () {
+                            window.location.href = "/admin/home";
+                        },
+                        error: function () {
+                            alert("Algum erro aconteceu ao finalizar projeto")
+                        }
+                    });
+
+                }
+                else {
+                    alert("Ok continue your work");
+                }
+
+            })
         </script>

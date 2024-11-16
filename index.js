@@ -344,7 +344,20 @@ app.post("/projeto-novo", async (req, res) => {
     }
 })
 
-app.post("/editar-projeto", async (req, res) => {
+app.route("/editar-projeto")
+    .put(async (req,res)=>{
+        const data = req.body
+        try {
+            await db.query("UPDATE projetos SET status = $1 WHERE id = $2", [data.status, parseInt(data.id)])
+            res.sendStatus(200)
+
+        } catch (error) {
+            console.log(error, "Erro ao finalizar projeto")
+            res.sendStatus(500)
+        }
+
+    })
+    .post (async (req, res) => {
     const awnser = req.body
     console.log(awnser)
     try {
@@ -374,24 +387,41 @@ app.post("/editar-orcamento/:id", async (req, res) => {
 })
 
 app.post("/link-add", async (req, res) => {
-    const awnser = req.body;
     const id = parseInt(req.body.id);
-    awnser.nomelink.forEach((element, index) => {
+    const awnser = req.body;
+    const url = req.header('Referer');
+    let isArray = Array.isArray(awnser.nomelink)
+    if(isArray == true){
+        awnser.nomelink.forEach((element, index) => {
+            try {
+                db.query("INSERT INTO documentos (project_id,link,type,nome,obs) VALUES ($1,$2,$3,$4,$5)", [id, awnser.link[index], awnser.type[index], element, awnser.obslink[index] ? awnser.obslink[index] : null])
+
+            } catch (error) {
+                console.log(error, "erro ao adicionar link na db")
+                res.send("Algum erro aconteceu, contate suporte")
+
+            }
+
+        });
+        res.redirect(url)
+    }else{
         try {
-            db.query("INSERT INTO documentos (project_id,link,type,nome,obs) VALUES ($1,$2,$3,$4,$5)", [id, awnser.link[index], awnser.type[index], element, awnser.obslink[index] ? awnser.obslink[index] : null])
+            await db.query("INSERT INTO documentos (project_id,link,type,nome,obs) VALUES ($1,$2,$3,$4,$5)", [id, awnser.link, awnser.type, awnser.nomelink, awnser.obslink ? awnser.obslink : null])
 
         } catch (error) {
             console.log(error, "erro ao adicionar link na db")
             res.send("Algum erro aconteceu, contate suporte")
 
         }
-    });
-    res.redirect("/admin/home")
+        res.redirect(url)
+    }
+
 })
 
 app.post("/client-add", async (req, res) => {
-    const client_id = parseInt(req.body.cliente)
-    const project_id = parseInt(req.body.project_id)
+    const client_id = parseInt(req.body.cliente);
+    const project_id = parseInt(req.body.project_id);
+    const url = req.header('Referer');
     if (await getRelationships(client_id, project_id)) {
         console.log("Relação já registrada")
     } else {
@@ -402,7 +432,7 @@ app.post("/client-add", async (req, res) => {
             console.log("erro ao inserir query", error)
         }
     }
-    res.redirect("/admin/home")
+    res.redirect(url)
 
 })
 
