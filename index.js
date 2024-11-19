@@ -133,14 +133,15 @@ app.get("/clientes", async (req, res) => {
         const array = await getProjectFromClient(userId)
         const atuais = array.filter((element) => element.status == "Em andamento")
         const finalizados = array.filter((element) => element.status == "Finalizado")
-        res.render("cliente.ejs", { user: user, atuais: atuais,finalizados:finalizados })
+        res.render("cliente.ejs", { user: user, atuais: atuais, finalizados: finalizados })
     }
 
 })
 
 app.get("/detalhes-de-projeto/:id", async (req, res) => {
-    const projectId = req.params.id;
-        const teste = {
+    const projectId = req.params.id
+    console.log(req.params)
+    const teste = {
         id: 3,
         nome: 'João ',
         sobrenome: 'Sem braço',
@@ -153,33 +154,25 @@ app.get("/detalhes-de-projeto/:id", async (req, res) => {
         tel: null
     };
     let user = req.user
-    user =teste;
-    if (user == undefined) {
+    //p teste
+    user = teste;
+    const checkRightUser = await getRelationships(user.id, projectId);
+
+    if (user == undefined || checkRightUser == false) {
+        console.log("Cliente indefinido ou não dono do projeto")
         res.redirect("/clientes")
     } else {
-        const checkRightUser = await getRelationships(user.id, projectId)
+        const result = await getDbProject(projectId)
+        const projeto = result[0]
+        const array = await getDocuments(projectId)
+        const imagens = array.arrayImagens
+        const spreadsheet = array.arraySpreadsheet
+        const documentos = array.arrayDocumentos
+        const arquivos = array.arrayArquivos
+        console.log(array)
+        res.render("detalhado.ejs", { user: user, projeto: projeto, imagens: imagens, documentos: documentos, spreadsheet: spreadsheet, arquivos: arquivos })
 
-        if (checkRightUser == true) {
-            const result = await getDbProject(projectId)
-            const projeto = result[0]
-            const array = await getDocuments(projectId)
-            const imagens = array.arrayImagens.map((element) => element.link)
-            const spreadsheet = array.arraySpreadsheet.map((element) => element.link)
-            const documentos = array.arrayDocumentos.map((element) => element.link)
-            const arquivos = array.arrayArquivos.map((element) => element.link)
-            res.render("detalhado.ejs", { user: user, projeto: projeto, imagens: imagens, documentos: documentos, spreadsheet: spreadsheet, arquivos: arquivos })
-
-        } else {
-            console.log("Segundo else")
-            res.redirect("/clientes")
-
-        }
-
-
-    }
-
-
-
+    };
 
 })
 

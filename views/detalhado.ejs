@@ -1,126 +1,250 @@
 <%- include('partials/header.ejs') %>
 
+    <style>
+        body {
+            background-color: #e9eef6;
+        }
 
-<section id="header-exclusive">
-    <% if(locals.user){%>
-        <h1>
-            Aqui esta seu projeto,  <%= user.nome %> <%= user.sobrenome %>.
-        </h1>
-        
-   <% } %>
-</section>
-<section id="header-de-projeto">
-    <% if(locals.projeto){%>
-        <h2 class="h2"><%= projeto.nome %></h2>
-        <p><%= projeto.endereco %></p>
-        <p><%= projeto.finalidade %></p>
-        
-   <% } %>
+        #perfil {
+            border-radius: 50%;
+        }
 
-</section>
+        .carousel-item>img {
+            max-height: 360px;
+            width: 100%;
+            object-fit: scale-down
+        }
+    </style>
+
+    <!--Cabeçalho-->
+    <div class="container">
+        <div class="row my-2">
+            <div class="col-8">
+                <% if(locals.projeto){%>
+                    <h2 class="h2">
+                        <%= projeto.nome %>
+                    </h2>
+                    <p>
+                        <%= projeto.endereco %>
+                    </p>
+                    <p>
+                        <%= projeto.finalidade %>
+                    </p>
+
+                    <% } %>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <div class="col-4">
+                        <% if(locals.user){%>
+                            <% if(user.foto){ %>
+                                <img id="perfil" src="<%=user.foto%>" alt="" width="200px">
+                                <% }else{ %>
+                                    <img id="perfil"
+                                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzIdr7HcfjPdwSAGPtaGRxlaM7d-PaAJdX9Q&s"
+                                        alt="" width="200px">
+                                    <% } %>
+                                        <% } %>
 
 
-<div class="container text-center">
-    <div class="row">
-        <div class="col">
-            <h3 class="fs-2 text-body-emphasis">Fotos do projeto</h3>
-            <section id="arquivos">
+                    </div>
+                    <div class="col-4 justify-content-center">
+                        <% if(locals.user){%>
+                            <p>
+                                <%= user.nome %>
+                                    <%= user.sobrenome %>
+                            </p>
+
+                            <% } %>
+
+                    </div>
+                    <div class="col-4">
+                        <a href="/clientes">
+                            <div>
+                                <i class="bi bi-arrow-return-left"></i>
+                                <span>Voltar</span>
+                            </div>
+
+                        </a>
+                        <a href="/logout">
+                            <div>
+                                <i class="bi bi-box-arrow-left"></i>
+                                <span>Sair</span>
+                            </div>
+
+
+                        </a>
+
+
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <!--corpo-->
+    <div class="container text-center">
+        <div class="row">
+
+            <div class="col">
+                <h3 class="fs-2 text-body-emphasis">Fotos do projeto</h3>
                 <% if(locals.imagens){%>
-                    <% if(imagens.length == 0){ %>
-                    <p>
-                        Aqui ficarão as imagens do seu projeto, por enquanto não temos nenhum. 
-                    </p>
-                <% }else{ %>
-                    <% imagens.forEach((element)=>{%>
-                        <a href="<%=element%>">
-                            <i class="bi bi-file-earmark-image"></i>                        </a>
-            
-                   <% }) %>
-            
-               <% } %>
-               <% } %>
-            
-            </section>
-            
+                    <% if(imagens.length==0){ %>
+                        <p>
+                            Aqui ficarão imagens do projeto, por enquanto não temos nenhuma.
+                        </p>
+                        <% }else{ %>
+                            <div id="carouselExample" class="carousel slide">
+                                <div class="carousel-inner">
+                                    <% imagens.forEach((element,index)=> { %>
+                                        <% if(index==0 ){ %>
+                                            <div class="carousel-item active">
+                                                <img src="<%=element.link%>" class="d-block w-100" alt="...">
+                                            </div>
+                                            <% }else{ %>
+                                                <div class="carousel-item">
+                                                    <img src="<%=element.link%>" class="d-block w-100" alt="...">
+                                                </div>
+
+                                                <% } %>
+                                                    <% }) %>
+
+
+
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample"
+                                    data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExample"
+                                    data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                            <% } %>
+                                <% } %>
+            </div>
+
+            <div class="col">
+                <h3 class="fs-2 text-body-emphasis">Arquivos do projeto</h3>
+                <div id="arquivos" class="row">
+                    <% if(locals.arquivos){%>
+                        <% if(arquivos.length==0){ %>
+                            <p>
+                                Aqui ficarão arquivos do projeto, por enquanto não temos nenhum.
+                            </p>
+                            <% }else{ %>
+                                <% arquivos.forEach(element=> { %>
+                                    <div class="col-4 m-2 text-center">
+                                        <a href='<%=element.link%>'>
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                            width="48" height="48"
+                                            fill="currentColor"
+                                            class="bi bi-clipboard mx-auto d-block"
+                                            viewBox="0 0 16 16">
+                                            <path
+                                                d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z" />
+                                            <path
+                                                d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z" />
+                                        </svg>
+                                            <p>
+                                                <%= element.nome %>
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <% }) %>
+
+                                        <% } %>
+                                            <% } %>
+                </div>
+
+            </div>
+
         </div>
-        <div class="col">
-            <h3 class="fs-2 text-body-emphasis">Arquivos do projeto</h3>
-            <section id="arquivos">
-                <% if(locals.arquivos){%>
-                    <% if(arquivos.length == 0){ %>
-                    <p>
-                        Aqui ficarão arquivos do projeto, por enquanto não temos nenhum. 
-                    </p>
-                <% }else{ %>
-                    <% arquivos.forEach((element)=>{%>
-                        <a href="<%=element%>">
-                            <i class="bi bi-file-word"></i>
-                        </a>
-            
-                   <% }) %>
-            
-               <% } %>
-               <% } %>
-            
-            </section>
-            
+        <div class="row">
+            <div class="col">
+                <h3 class="fs-2 text-body-emphasis">Documentos do projeto</h3>
+                <div id="documentos" class="row">
+                    <% if(locals.documentos){%>
+                        <% if(documentos.length==0){ %>
+                            <p>
+                                Aqui ficarão documentos, por enquanto não temos nenhum.
+                            </p>
+                            <% }else{ %>
+                                <% documentos.forEach(element=> { %>
+                                    <div class="col-4 m-2 text-center">
+                                        <a href='<%=element.link%>'>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48"
+                                                fill="currentColor" class="bi bi-file-word mx-auto d-block"
+                                                viewBox="0 0 16 16">
+                                                <path
+                                                    d="M4.879 4.515a.5.5 0 0 1 .606.364l1.036 4.144.997-3.655a.5.5 0 0 1 .964 0l.997 3.655 1.036-4.144a.5.5 0 0 1 .97.242l-1.5 6a.5.5 0 0 1-.967.01L8 7.402l-1.018 3.73a.5.5 0 0 1-.967-.01l-1.5-6a.5.5 0 0 1 .364-.606z" />
+                                                <path
+                                                    d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1" />
+                                            </svg>
+                                            <p>
+                                                <%= element.nome %>
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <% }) %>
+
+                                        <% } %>
+                                            <% } %>
+
+                </div>
+            </div>
+
+            <div class="col">
+                <h3 class="fs-2 text-body-emphasis">Estimativa de investimento</h3>
+                <div id="spreadsheet" class="row">
+                    <% if(locals.spreadsheet){%>
+                        <% if(spreadsheet.length==0){ %>
+                            <p>
+                                Aqui ficarão as tabelas do projeto, por enquanto não temos nenhum.
+                            </p>
+                            <% }else{ %>
+                                <% spreadsheet.forEach(element=> { %>
+                                    <div class="col-4 m-2 text-center">
+                                        <a href='<%=element.link%>'>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48"
+                                                fill="currentColor" class="bi bi-table mx-auto d-block"
+                                                viewBox="0 0 16 16">
+                                                <path
+                                                    d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 2h-4v3h4zm0 4h-4v3h4zm0 4h-4v3h3a1 1 0 0 0 1-1zm-5 3v-3H6v3zm-5 0v-3H1v2a1 1 0 0 0 1 1zm-4-4h4V8H1zm0-4h4V4H1zm5-3v3h4V4zm4 4H6v3h4z" />
+                                            </svg>
+                                            <p>
+                                                <%= element.nome %>
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <% }) %>
+
+                                        <% } %>
+                                            <% } %>
+
+                </div>
+
+            </div>
+
+
         </div>
+
+
     </div>
-    <div class="row">
-        <div class="col">
-            <h3 class="fs-2 text-body-emphasis">Documentos do projeto</h3>
-            <section id="documentos">
-                <% if(locals.documentos){%>
-                    <% if(documentos.length == 0){ %>
-                    <p>
-                        Aqui ficarão documentos, por enquanto não temos nenhum. 
-                    </p>
-                <% }else{ %>
-                    <% documentos.forEach((element)=>{%>
-                        <a href="<%=element%>">
-                            <i class="bi bi-file-word"></i>
-                        </a>
-            
-                   <% }) %>
-            
-               <% } %>
-               <% } %>
-            
-            </section>
-
-        </div>
-        <div class="col">
-            <h3 class="fs-2 text-body-emphasis">Estimativa de investimento</h3>
-
-            <section id="spreadsheet">
-                <% if(locals.spreadsheet){%>
-                    <% if(spreadsheet.length == 0){ %>
-                    <p>
-                        Aqui ficarão as tabelas do projeto, por enquanto não temos nenhum. 
-                    </p>
-                <% }else{ %>
-                    <% spreadsheet.forEach((element)=>{%>
-                        <a href="<%=element%>">
-                            <i class="bi bi-file-earmark-spreadsheet"></i>                        </a>
-            
-                   <% }) %>
-            
-               <% } %>
-               <% } %>
-            
-            </section>       
-        
-        
-        </div>
-
-
     </div>
 
-</div>
 
 
 
 
 
-
-<%- include('partials/footer.ejs') %>
+    <%- include('partials/footer.ejs') %>
