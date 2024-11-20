@@ -7,12 +7,18 @@
 
         #perfil {
             border-radius: 50%;
+            height: 94px;
+            width: auto;
         }
 
         .carousel-item>img {
             max-height: 360px;
             width: 100%;
             object-fit: scale-down
+        }
+
+        h3+div{
+            min-height: 360px;
         }
     </style>
 
@@ -42,18 +48,16 @@
                                 <% }else{ %>
                                     <img id="perfil"
                                         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzIdr7HcfjPdwSAGPtaGRxlaM7d-PaAJdX9Q&s"
-                                        alt="" width="200px">
+                                        alt="">
                                     <% } %>
                                         <% } %>
 
 
                     </div>
-                    <div class="col-4 justify-content-center">
+                    <div class="col-4 container">
                         <% if(locals.user){%>
-                            <p>
-                                <%= user.nome %>
-                                    <%= user.sobrenome %>
-                            </p>
+                            <p class=""><%= user.nome %> </p>
+                            <p class=""> <%= user.sobrenome %></p>
 
                             <% } %>
 
@@ -93,7 +97,7 @@
         <div class="row">
 
             <div class="col">
-                <h3 class="fs-2 text-body-emphasis">Fotos do projeto</h3>
+                <h3 class="fs-2 text-body-emphasis my-2">Fotos do projeto</h3>
                 <% if(locals.imagens){%>
                     <% if(imagens.length==0){ %>
                         <p>
@@ -134,7 +138,7 @@
             </div>
 
             <div class="col">
-                <h3 class="fs-2 text-body-emphasis">Arquivos do projeto</h3>
+                <h3 class="fs-2 text-body-emphasis my-2">Arquivos do projeto</h3>
                 <div id="arquivos" class="row">
                     <% if(locals.arquivos){%>
                         <% if(arquivos.length==0){ %>
@@ -171,7 +175,7 @@
         </div>
         <div class="row">
             <div class="col">
-                <h3 class="fs-2 text-body-emphasis">Documentos do projeto</h3>
+                <h3 class="fs-2 text-body-emphasis my-2">Documentos do projeto</h3>
                 <div id="documentos" class="row">
                     <% if(locals.documentos){%>
                         <% if(documentos.length==0){ %>
@@ -204,7 +208,7 @@
             </div>
 
             <div class="col">
-                <h3 class="fs-2 text-body-emphasis">Estimativa de investimento</h3>
+                <h3 class="fs-2 text-body-emphasis my-2">Estimativa de investimento</h3>
                 <div id="spreadsheet" class="row">
                     <% if(locals.spreadsheet){%>
                         <% if(spreadsheet.length==0){ %>

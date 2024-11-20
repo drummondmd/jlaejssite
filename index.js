@@ -7,6 +7,9 @@ import { Strategy } from "passport-local";
 import GoogleStrategy from "passport-google-oauth2";
 import session from "express-session";
 import env from "dotenv";
+import nodemailer from "nodemailer";
+import crypto from "crypto";
+
 
 const app = express();
 const port = 3000;
@@ -38,6 +41,8 @@ const db = new pg.Client({
     port: process.env.PG_PORT,
 });
 db.connect();
+
+
 
 ///get routes
 app.get("/", (req, res) => {
@@ -140,23 +145,21 @@ app.get("/clientes", async (req, res) => {
 
 app.get("/detalhes-de-projeto/:id", async (req, res) => {
     const projectId = req.params.id
-    console.log(req.params)
-    const teste = {
-        id: 3,
-        nome: 'João ',
-        sobrenome: 'Sem braço',
-        nascimento: '2024-06-04T03:00:00.000Z',
-        sexo: 'masculino',
-        senha: '$2b$10$0gdTp1ZeAd4yA6sqcT16aOxw7rzgXWBj.F42j53qX5Z3vJfH2H8gu',
-        email: 'joao@gmail.com',
-        administrador: false,
-        foto: 'https://lh3.googleusercontent.com/a/ACg8ocLPJR4HdCOI60lCLZTXHY8uPeCv9yt7K-9xwN9hCHOo2gtHzgg=s360-c-no',
-        tel: null
-    };
+    // const teste = {
+    //     id: 3,
+    //     nome: 'João ',
+    //     sobrenome: 'Sem braço',
+    //     nascimento: '2024-06-04T03:00:00.000Z',
+    //     sexo: 'masculino',
+    //     senha: '$2b$10$0gdTp1ZeAd4yA6sqcT16aOxw7rzgXWBj.F42j53qX5Z3vJfH2H8gu',
+    //     email: 'joao@gmail.com',
+    //     administrador: false,
+    //     foto: 'https://lh3.googleusercontent.com/a/ACg8ocLPJR4HdCOI60lCLZTXHY8uPeCv9yt7K-9xwN9hCHOo2gtHzgg=s360-c-no',
+    //     tel: null
+    // };
     let user = req.user
-    //p teste
-    user = teste;
-    const checkRightUser = await getRelationships(user.id, projectId);
+
+    const checkRightUser = await getRelationships(user ? user.id : null, projectId);
 
     if (user == undefined || checkRightUser == false) {
         console.log("Cliente indefinido ou não dono do projeto")
@@ -169,7 +172,6 @@ app.get("/detalhes-de-projeto/:id", async (req, res) => {
         const spreadsheet = array.arraySpreadsheet
         const documentos = array.arrayDocumentos
         const arquivos = array.arrayArquivos
-        console.log(array)
         res.render("detalhado.ejs", { user: user, projeto: projeto, imagens: imagens, documentos: documentos, spreadsheet: spreadsheet, arquivos: arquivos })
 
     };
@@ -214,10 +216,10 @@ app.post(
 //registro usuario
 app.post("/register", async (req, res) => {
     const dn = new Date(req.body.dn)
-    console.log(req.body, dn)
+    console.log(req.body)
 
     try {
-        const result = await getDbUsers(req.body.email);
+        const result = await getDbUsersLogin(req.body.email);
         if (result.length > 0) {
             res.render("login.ejs", { mensagem: "Usuario Cadastrado, tente fazer login" })
         } else {
@@ -226,9 +228,9 @@ app.post("/register", async (req, res) => {
                     console.log("Erro ao criptografar senha" + err)
                     res.send("Algum erro aconteceu")
                 } else {
-                    await db.query("INSERT INTO usuarios (nome,sobrenome,nascimento,sexo,senha,email,administrador,verificado) VALUES($1,$2,$3,$4,$5,$6,$7,$8)",
+                    await db.query("INSERT INTO usuarios (nome,sobrenome,nascimento,sexo,senha,email,administrador) VALUES($1,$2,$3,$4,$5,$6,$7)",
                         [
-                            req.body.nome, req.body.sobrenome, req.body.dn, req.body.sexo, hash, req.body.email, false, false
+                            req.body.nome, req.body.sobrenome, req.body.dn, req.body.sexo, hash, req.body.email, false
                         ])
                     console.log("query succefull")
                     res.render("login.ejs", { mensagem: "Usuario registrado com sucesso, faça login" })
@@ -515,6 +517,45 @@ app.post("/atualizar-etapas/:id", async (req, res) => {
     res.redirect(url)
 })
 
+app.route("/reiniciar-senha/:token")
+    .get(async (req, res) => {
+        const token = req.params.token
+        if (token == "no-token") {
+            res.send("Entre em contato com o arquiteto e solicite nova senha")
+        } else {
+            res.render("login.ejs", { token: token })
+        }
+
+    })
+    .post(async (req, res) => {
+        console.log("teste")
+        const tokenSend = req.params.token
+        const email = req.body.username
+        try {
+            const result = await db.query("SELECT * FROM usuarios WHERE email = $1 AND token = $2", [email,tokenSend]);
+            console.log(result.rows)
+            const row = result.rows
+            if(row.length == 0){
+                res.send("Email não corresponde ao token")
+            }else{
+                console.log(row)
+                res.sendStatus(200)
+            }
+
+            ///checar email
+
+        } catch (error) {
+            console.log(error)
+            res.send("Algum erro aconteceu, contate o suporte")
+
+        }
+
+
+
+
+
+    })
+
 //autentication
 
 //local
@@ -561,59 +602,13 @@ passport.deserializeUser((user, cb) => {
 
 
 ///basic functions
-app.get("/teste", async (req, res) => {
-    const teste = {
-        id_cliente: '13',
-        nome_cliente: 'Maria ',
-        sobrenome_cliente: 'Alice',
-        dn: '2000-10-25',
-        sexo: 'Feminino',
-        email: 'maria@gmail.com',
-        tel: '31999108076',
-        nome_projeto: 'Casa do Marcelo',
-        cidade: 'BH',
-        endereco: 'Rua Rio Grande do Norte, 916, Savassi',
-        tipo_estabelecimento: 'residencial',
-        padrao_estabelecimento: 'normal',
-        valor_orcamento: '4388',
-        valor_est_obra: '35000000',
-        etapa0: 'Pré liminar',
-        prazo_etapa0: '2024-12-08',
-        etapa1: 'Final',
-        prazo_etapa1: '2024-12-08',
-        etapa2: 'Final',
-        prazo_etapa2: '2024-12-08',
-        data_projeto: '2024-11-08'
-    }
+app.route("/teste")
+    .get(async (req, res) => {
+        // get test
+    })
+    .post(async (req, res) => {
 
-    let awnser = teste
-    step4(1)
-
-    async function step4(project_id) {
-        const keys = Object.keys(awnser)
-        const filter = keys.filter((elem, index) => elem.includes('etapa'));
-        const map = filter.sort()
-        const map1 = map.slice(0, (filter.length) / 2)
-        console.log(awnser.etapa0)
-        for (let i = 0; i < map1.length; i++) {
-            console.log(i, map1[i])
-            let elem = map1[i]
-            let nome_etapa = awnser[elem]
-            let nome_prazo = `prazo_etapa${i}`
-            let prazo_etapa = awnser[nome_prazo]
-            console.log(nome_etapa, nome_prazo, prazo_etapa)
-
-            // try {
-            //     await db.query('INSERT INTO etapas (nome_etapa,prazo,project_id,status) VALUES ($1,$2,$3,$4)',[nome_etapa,prazo_etapa,project_id,"Em aberto"])
-
-            // } catch (error) {
-            //     console.log(error,"erro ao inserir etapas")
-
-            // }
-        }
-    }
-    res.sendStatus(200)
-})
+    })
 
 // Basic functions
 
@@ -739,4 +734,5 @@ app.listen(port, () => {
     console.log(`Servidor funcionando na porta ${port}`)
 })
 
-
+///depois acho lugar p ele
+const tokenSecret = crypto.randomBytes(16).toString('hex');
