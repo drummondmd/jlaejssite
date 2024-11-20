@@ -1,157 +1,205 @@
 <%- include('partials/header.ejs') %>
-<%- include ('partials/admin-header.ejs') %>
+    <%- include ('partials/admin-header.ejs') %>
 
-<div class="col-10">
-    <div id="user">
-        <div class="row container">
-            <% if(locals.user){%>
-                <% user.forEach(element=> {%>
-                    <div class="col-3">
-                        <div class="card m-2" style="width: 18rem;">
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <%=element.nome%>
-                                        <%=element.sobrenome%>
-                                </h5>
-                                <h6 class="card-subtitle">
-                                    <%=element.email%>
-                                </h6>
-                                <form action="/updateUser/<%=element.id%>" method="post">
-                                    <div class="input-group">
-                                        <span>
-                                            Administrador:
-                                        </span>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="administrador"
-                                                value="true" <% if(element.administrador==true){%>
-                                            checked
-                                            <%}%>
-                                                onchange="this.form.submit()"
-                                                >
-                                                <label class="form-check-label" for="flexSwitchCheckChecked">Sim</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="administrador"
-                                                value="false" <% if(element.administrador==false){%>
-                                            checked
-                                            <%}%>
-                                                onchange="this.form.submit()"
-                                                >
-                                                <label class="form-check-label" for="flexSwitchCheckChecked">Não</label>
+        <div class="col-10">
+            <div id="user">
+                <div class="row container">
+                    <% if(locals.user){%>
+                        <% user.forEach(element=> {%>
+                            <div class="col-3">
+                                <div class="card m-2" style="width: 18rem;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <%=element.nome%>
+                                                <%=element.sobrenome%>
+                                        </h5>
+                                        <h6 class="card-subtitle">
+                                            <%=element.email%>
+                                        </h6>
+                                        <form action="/updateUser/<%=element.id%>" method="post">
+                                            <div class="input-group">
+                                                <span>
+                                                    Administrador:
+                                                </span>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="administrador"
+                                                        value="true" <% if(element.administrador==true){%>
+                                                    checked
+                                                    <%}%>
+                                                        onchange="this.form.submit()"
+                                                        >
+                                                        <label class="form-check-label"
+                                                            for="flexSwitchCheckChecked">Sim</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="administrador"
+                                                        value="false" <% if(element.administrador==false){%>
+                                                    checked
+                                                    <%}%>
+                                                        onchange="this.form.submit()"
+                                                        >
+                                                        <label class="form-check-label"
+                                                            for="flexSwitchCheckChecked">Não</label>
+                                                </div>
+                                            </div>
+
+
+                                        </form>
+                                        <div>
+                                            <%if(element.token){%>
+                                                <a href="localhost:3000/reiniciar-senha/<%=element.token%>">Copiar e enviar link a cliente</a>
+                                                <%}else{%>
+                                                    <button class="btn btn-outline-warning col-12 btn-form"
+                                                        id="btn-<%=element.id%>" type="button">Resetar Senha</button>
+
+                                                    <%}%>
+
+
+
+
                                         </div>
                                     </div>
 
+                                </div>
+                            </div>
+                            <% }); %>
 
-                                </form>
+
+                </div>
+
+
+
+
+
+
+
+
+            </div>
+            <div id="home">
+                <%}else{%>
+
+                    <div class="home">
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="text-center">
+                                    <h5 class="h5">Projetos em andamento:</h3>
+
+                                </div>
+
+                                <table class="table table-striped">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th colspan="2">Projeto</th>
+                                            <th>Etapa Atual</th>
+                                            <th>Dias faltantes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% if(locals.etapas){ %>
+                                            <% etapas.forEach(element=> {%>
+                                                <tr>
+                                                    <td colspan="2">
+                                                        <%=element.nome%>
+                                                    </td>
+                                                    <td>
+                                                        <%=element.nome_etapa%>
+                                                    </td>
+                                                    <td>
+                                                        <%=element.dpe%>
+                                                    </td>
+                                                </tr>
+                                                <%}); %>
+
+                                                    <% }else{ %>
+
+                                                        <tr>
+                                                            <td colspan="2">Ainda sem projetos</td>
+                                                        </tr>
+
+                                                        <% } %>
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+                            <div class="col-3">
+                                <div class="text-center">
+                                    <h5 class="h5">Orçamentos em aberto:</h5>
+                                </div>
+                                <table class="table table-striped">
+                                    <colgroup>
+                                        <col>
+                                        <col>
+
+                                    </colgroup>
+                                    <thead class="thead-light">
+                                        <th>Projeto</th>
+                                        <th>Dias sem resposta</th>
+                                    </thead>
+                                    <tbody>
+                                        <% if(locals.orcamentos){ %>
+                                            <% orcamentos.forEach(element=> {%>
+                                                <tr>
+                                                    <td>
+                                                        <%=element.nome_projeto%>
+                                                    </td>
+                                                    <td>
+                                                        <%=element.dsr%>
+                                                    </td>
+                                                </tr>
+
+                                                <% }); %>
+                                                    <% }else{ %>
+                                                        <tr>
+                                                            <td>Ainda sem dados.</td>
+                                                        </tr>
+                                                        <% } %>
+                                    </tbody>
+                                </table>
+
+
 
                             </div>
 
                         </div>
+
                     </div>
-                    <% }); %>
 
 
+
+
+                    <%}%>
+
+
+            </div>
+
+        </div>
+
+        <!--Fim da div row do admin header-->
         </div>
 
 
 
+        <%- include('partials/footer.ejs') %>
+
+            <script>
+                $(".btn-form").on("click", function () {
+                    let id = this.id;
+                    let split = id.split("-");
+                    let clientID = split[1];
+                    $.ajax({
+                        type: "post",
+                        url: `/updateUser/${clientID}`,
+                        data: { novaSenha: true },
+                        success: function () {
+                            alert("Senha será resetada");
+                            window.location.href = "/admin/home";
+                        },
+                        error: function () {
+                            alert("Algum erro aconteceu ao resetar senha")
+                        }
+                    });
+                })
 
 
-
-
-
-    </div>
-    <div id="home">
-        <%}else{%>
-
-            <div class="home">
-                <div class="row">
-                    <div class="col-8">
-                        <div class="text-center">
-                            <h5 class="h5">Projetos em andamento:</h3>
-
-                        </div>
-
-                        <table class="table table-striped">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th colspan="2">Projeto</th>
-                                    <th>Etapa Atual</th>
-                                    <th>Dias faltantes</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% if(locals.etapas){ %>
-                                    <% etapas.forEach(element => {%>
-                                        <tr>
-                                            <td colspan="2"><%=element.nome%></td>
-                                            <td><%=element.nome_etapa%></td>
-                                            <td><%=element.dpe%></td>
-                                        </tr>
-                                    <%}); %>
-
-                                <% }else{ %>
-
-                                <tr>
-                                    <td colspan="2">Ainda sem projetos</td>
-                                </tr>
-
-                                <% } %>
-
-                            </tbody>
-                        </table>
-
-                    </div>
-                    <div class="col-3">
-                        <div class="text-center">
-                            <h5 class="h5">Orçamentos em aberto:</h5>
-                        </div>
-                        <table class="table table-striped">
-                            <colgroup>
-                                <col>
-                                <col>
-
-                            </colgroup>
-                            <thead class="thead-light">
-                                <th>Projeto</th>
-                                <th>Dias sem resposta</th>
-                            </thead>
-                            <tbody>
-                                <% if(locals.orcamentos){ %>
-                                    <% orcamentos.forEach(element => {%>
-                                        <tr>
-                                            <td><%=element.nome_projeto%></td>
-                                            <td><%=element.dsr%></td>
-                                        </tr>
-
- <%                                   }); %>
-                                <% }else{ %>
-                                    <tr>
-                                        <td>Ainda sem dados.</td>
-                                    </tr>
-                                <% } %>
-                            </tbody>
-                        </table>
-
-
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-
-            <%}%>
-
-
-    </div>
-
-</div>
-
-<!--Fim da div row do admin header-->
-</div>
-
-    <%- include('partials/footer.ejs') %>
+            </script>

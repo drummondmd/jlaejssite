@@ -251,29 +251,50 @@ app.post("/register", async (req, res) => {
 ///editar usuario
 app.post("/updateUser/:id", async (req, res,) => {
     const id = req.params.id
-    await queryUpdate("admninistrador", req.body.administrador, id)
-    await queryUpdate("verificado", req.body.verificado, id)
+    console.log(req.body)
 
-    async function queryUpdate(coluna, valor, id) {
+    if(req.body.novaSenha){
+        console.log("passou")
+        const tokenSecret = crypto.randomBytes(16).toString('hex');
         try {
-            switch (coluna) {
-                case 'admninistrador':
-                    await db.query('UPDATE usuarios SET administrador = ($1) WHERE id = ($2);', [valor, id])
-                    break;
-                case 'verificado':
-                    await db.query('UPDATE usuarios SET verificado = ($1) WHERE id = ($2);', [valor, id])
-                    break;
-                default:
-                    console.log("algo de errado na função queryUpdate")
-                    break;
-            }
+            await db.query('UPDATE usuarios SET token = ($1), senha = ($2) WHERE id = ($3);', [tokenSecret,null,id]);
+            res.sendStatus(200)
 
         } catch (error) {
-            console.log("Algum erro aconteceu na query", error)
+            console.log(error,"erro ao inserir token e apagar senha atual")
+            res.send("Algo de errado aconteceu, contate suporte")
         }
+
+    }else{
+        await queryUpdate("admninistrador", req.body.administrador, id)
+        await queryUpdate("verificado", req.body.verificado, id)
+
+        async function queryUpdate(coluna, valor, id) {
+            try {
+                switch (coluna) {
+                    case 'admninistrador':
+                        await db.query('UPDATE usuarios SET administrador = ($1) WHERE id = ($2);', [valor, id])
+                        break;
+                    case 'verificado':
+                        await db.query('UPDATE usuarios SET verificado = ($1) WHERE id = ($2);', [valor, id])
+                        break;
+                    default:
+                        console.log("algo de errado na função queryUpdate")
+                        break;
+                }
+
+            } catch (error) {
+                console.log("Algum erro aconteceu na query", error)
+            }
+        }
+
+        res.redirect("/admin/usuarios");
+
+
+
+
     }
 
-    res.redirect("/admin/usuarios");
 
 });
 //novo-projeto
@@ -528,21 +549,37 @@ app.route("/reiniciar-senha/:token")
 
     })
     .post(async (req, res) => {
-        console.log("teste")
-        const tokenSend = req.params.token
+        const token = req.params.token
         const email = req.body.username
         try {
-            const result = await db.query("SELECT * FROM usuarios WHERE email = $1 AND token = $2", [email,tokenSend]);
-            console.log(result.rows)
-            const row = result.rows
-            if(row.length == 0){
-                res.send("Email não corresponde ao token")
-            }else{
-                console.log(row)
-                res.sendStatus(200)
+            const result = await db.query("SELECT * FROM usuarios WHERE token = $1 AND email = $2", [token, email]);
+            if (result.rowCount == 0) {
+                console.log("Relação não registrada")
+                res.render("login.ejs", { token: token, tokenError: "Email diferente da solicitação,tente novamente ou contate suporte" })
+            } else {
+                bcrypt.hash(req.body.password, saltRounds, async (err, hash) => {
+                    if (err) {
+                        console.log("Erro ao criptografar senha" + err)
+                        res.send("Algum erro aconteceu")
+                    } else {
+                        try {
+                            await db.query('UPDATE usuarios SET senha = ($1),token = ($2) WHERE email = ($3);', [hash,null, email])
+                            res.redirect("/login")
+                        } catch (error) {
+                            console.log(error, "Erro ao atualizar senha")
+                            res.send("Algum erro aconteceu, contate o suporte")
+                        }
+
+
+
+                    }
+
+                })
+
+
+
             }
 
-            ///checar email
 
         } catch (error) {
             console.log(error)

@@ -1,84 +1,98 @@
 <%- include ('partials/header.ejs') %>
-<% if(locals.token){%>
+  <% if(locals.token){%>
 
-  <div class="container">
-    <div class="d-flex align-items-center justify-content-center" style="height: 80vh;">
-      <div class="row justify-content-center border rounded p-5">
-        <div class="col-3 d-flex align-items-center">
-          <div class="div">
-            <img src="/assets/img/logo.ico" alt="logo">
+    <div class="container">
+      <div class="d-flex align-items-center justify-content-center" style="height: 80vh;">
+        <div class="row justify-content-center border rounded p-5">
+          <div class="col-3 d-flex align-items-center">
+            <div class="div">
+              <img src="/assets/img/logo.ico" alt="logo">
+            </div>
           </div>
+          <div class="col-9">
+            <form class="form-signin" action="/reiniciar-senha/<%=token %>" method="post">
+              <div class="form-label-group">
+                <label for="inputEmail">Email Cadastrado:</label>
+                <input type="email" id="inputEmail" class="form-control" placeholder="Email" required="" autofocus=""
+                  name="username">
+              </div>
+              <div class="form-label-group">
+                <label for="inputPassword">Nova Senha:</label>
+                <input type="password" id="inputPassword" class="form-control" placeholder="Senha" required=""
+                  name="password">
+              </div>
+              <div class="mt-2">
+                <button class="btn btn-primary col-12" type="submit">Trocar Senha</button>
+              </div>
+
+              <div class="mt-2">
+                <% if(locals.tokenError){%>
+                  <p>
+                    <%= tokenError %>
+                  </p>
+                  <%} %>
+
+              </div>
+
+            </form>
+
+          </div>
+
         </div>
-        <div class="col-9">
-          <form class="form-signin" action="/reiniciar-senha/<%=token %>" method="post">
-            <div class="form-label-group">
-              <label for="inputEmail">Email Cadastrado:</label>
-              <input type="email" id="inputEmail" class="form-control" placeholder="Email" required="" autofocus=""
-                name="username">
-            </div>
-            <div class="form-label-group">
-              <label for="inputPassword">Nova Senha:</label>
-              <input type="password" id="inputPassword" class="form-control" placeholder="Senha" required=""
-                name="password">
-            </div>
-            <div class="mt-2">
-              <button class="btn btn-primary col-12" type="submit">Trocar Senha</button>
-            </div>
-
-          </form>
-
-        </div>
-
       </div>
     </div>
-  </div>
 
 
 
-<%}else{%>
+    <%}else{%>
 
-  <div class="container">
-    <div class="d-flex align-items-center justify-content-center" style="height: 80vh;">
-      <div class="row justify-content-center border rounded p-5">
-        <div class="col-3 d-flex align-items-center">
-          <div class="div">
-            <img src="/assets/img/logo.ico" alt="logo">
+      <div class="container">
+        <div class="d-flex align-items-center justify-content-center" style="height: 80vh;">
+          <div class="row justify-content-center border rounded p-5">
+            <div class="col-3 d-flex align-items-center">
+              <div class="div">
+                <img src="/assets/img/logo.ico" alt="logo">
+              </div>
+            </div>
+            <div class="col-9">
+              <form class="form-signin" action="/login" method="post">
+                <div class="form-label-group">
+                  <label for="inputEmail">Email</label>
+                  <input type="email" id="inputEmail" class="form-control" placeholder="Email" required="" autofocus=""
+                    name="username">
+                </div>
+                <div class="form-label-group">
+                  <label for="inputPassword">Senha</label>
+                  <input type="password" id="inputPassword" class="form-control" placeholder="Senha" required=""
+                    name="password">
+                </div>
+                <div class="mt-2">
+                  <button class="btn btn-primary col-12" type="submit">Entrar</button>
+                </div>
+                <div class="row mt-2">
+                  <div class="col">Ainda não cadastrado: <a class="link" href="/register">Registre</a></div>
+                  <div class="col text-center"><a href="/reiniciar-senha/no-token">Esqueceu a senha?</a></div>
+                </div>
+              </form>
+              <div>
+                <% if(locals.mensagem){%>
+                  <%=mensagem%>
+                    <%} %>
+              </div>
+
+            </div>
+
           </div>
         </div>
-        <div class="col-9">
-          <form class="form-signin" action="/login" method="post">
-            <div class="form-label-group">
-              <label for="inputEmail">Email</label>
-              <input type="email" id="inputEmail" class="form-control" placeholder="Email" required="" autofocus=""
-                name="username">
-            </div>
-            <div class="form-label-group">
-              <label for="inputPassword">Senha</label>
-              <input type="password" id="inputPassword" class="form-control" placeholder="Senha" required=""
-                name="password">
-            </div>
-            <div class="mt-2">
-              <button class="btn btn-primary col-12" type="submit">Entrar</button>
-            </div>
-            <div class="row mt-2">
-              <div class="col">Ainda não cadastrado: <a class="link" href="/register">Registre</a></div>
-              <div class="col text-center"><a href="/reiniciar-senha/no-token">Esqueceu a senha?</a></div>
-            </div>
-          </form>
-
-        </div>
-
       </div>
-    </div>
-  </div>
 
 
 
-<%} %>
-
+      <%} %>
 
 
 
 
 
-  <%- include ('partials/footer.ejs') %>
+
+        <%- include ('partials/footer.ejs') %>
