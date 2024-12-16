@@ -9,9 +9,11 @@
 /*--------------------------------------------------------------
 # General
 --------------------------------------------------------------*/
+
 body {
   font-family: "Open Sans", sans-serif;
   color: #444444;
+  min-height: 100%;
 }
 
 a {
@@ -117,7 +119,7 @@ h6 {
 # Navigation Menu
 --------------------------------------------------------------*/
 /**
-* Desktop Navigation 
+* Desktop Navigation
 */
 .navbar {
   padding: 0;
@@ -252,7 +254,7 @@ h6 {
 }
 
 /**
-* Mobile Navigation 
+* Mobile Navigation
 */
 .mobile-nav-toggle {
   color: #fff;
@@ -282,7 +284,7 @@ h6 {
   bottom: 0;
   background: rgba(16, 31, 29, 0.9);
   transition: 0.3s;
-  z-index: 0;
+  z-index: 2;
 }
 
 .navbar-mobile .mobile-nav-toggle {

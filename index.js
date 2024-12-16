@@ -9,6 +9,7 @@ import session from "express-session";
 import env from "dotenv";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
+import { errorMonitor } from "events";
 
 
 const app = express();
@@ -61,7 +62,8 @@ app.get("/login", (req, res) => {
         }
 
     } else {
-        res.render("login.ejs");
+        const error = req.session.messages
+        res.render("login.ejs",{mensagem:error?error[0]:null});
     }
 
 });
@@ -71,7 +73,6 @@ app.get("/register", (req, res) => {
 });
 
 app.get("/redirect", (req, res) => {
-    console.log(req.user)
     switch (req.user.administrador) {
         case true:
             res.redirect("/admin/home")
@@ -216,8 +217,6 @@ app.post(
 //registro usuario
 app.post("/register", async (req, res) => {
     const dn = new Date(req.body.dn)
-    console.log(req.body)
-
     try {
         const result = await getDbUsersLogin(req.body.email);
         if (result.length > 0) {
@@ -228,11 +227,10 @@ app.post("/register", async (req, res) => {
                     console.log("Erro ao criptografar senha" + err)
                     res.send("Algum erro aconteceu")
                 } else {
-                    await db.query("INSERT INTO usuarios (nome,sobrenome,nascimento,sexo,senha,email,administrador) VALUES($1,$2,$3,$4,$5,$6,$7)",
+                    await db.query("INSERT INTO usuarios (nome,sobrenome,nascimento,sexo,senha,email,administrador,tel) VALUES($1,$2,$3,$4,$5,$6,$7,$8)",
                         [
-                            req.body.nome, req.body.sobrenome, req.body.dn, req.body.sexo, hash, req.body.email, false
+                            req.body.nome, req.body.sobrenome, req.body.dn, req.body.sexo, hash, req.body.email, false,req.body.tel
                         ])
-                    console.log("query succefull")
                     res.render("login.ejs", { mensagem: "Usuario registrado com sucesso, faça login" })
                 }
 
@@ -251,7 +249,6 @@ app.post("/register", async (req, res) => {
 ///editar usuario
 app.post("/updateUser/:id", async (req, res,) => {
     const id = req.params.id
-    console.log(req.body)
 
     if(req.body.novaSenha){
         console.log("passou")
@@ -409,7 +406,6 @@ app.route("/editar-projeto")
     })
     .post(async (req, res) => {
         const awnser = req.body
-        console.log(awnser)
         try {
             await db.query("UPDATE projetos SET nome = $1,endereco =$2,orcamento=$3,finalidade=$4,display=$5,ativo=$6,custo_obra=$7 WHERE id = $8", [awnser.nome, awnser.endereco, awnser.orcamento, awnser.finalidade, awnser.display, awnser.ativo, awnser.custo_obra, awnser.id])
         } catch (error) {
@@ -420,6 +416,7 @@ app.route("/editar-projeto")
         res.redirect("/admin/projetos")
 
     })
+
 
 app.post("/editar-orcamento/:id", async (req, res) => {
     const id = req.params.id
@@ -512,7 +509,7 @@ app.post("/novo-orcamento", async (req, res) => {
 
     form['status'] = 'Em aberto'
     //fiquei com preguiça e coloquei 5 ambientes somente.
-    const arrayOfResults = [form.nome_cliente, form.sobrenome_cliente, form.dn, form.sexo, form.email, form.tel, form.nome_projeto, form.cidade, form.endereco, form.total, form.data, form.a_0_nome, form.a_0_m2, form.a_0_preco, form.a_1_nome, form.a_1_m2, form.a_10_preco, form.a_2_nome, form.a_2_m2, form.a_2_preco, form.a_3_nome, form.a_3_m2, form.a_3_preco, form.a_4_nome, form.a_4_m2, form.a_4_preco, form.a_5_nome, form.a_5_m2, form.a_5_preco, form.status]
+    const arrayOfResults = [form.nome_cliente, form.sobrenome_cliente, form.dn?form.dn:null, form.sexo, form.email, form.tel, form.nome_projeto, form.cidade, form.endereco, form.total, form.data, form.a_0_nome, form.a_0_m2, form.a_0_preco, form.a_1_nome, form.a_1_m2, form.a_10_preco, form.a_2_nome, form.a_2_m2, form.a_2_preco, form.a_3_nome, form.a_3_m2, form.a_3_preco, form.a_4_nome, form.a_4_m2, form.a_4_preco, form.a_5_nome, form.a_5_m2, form.a_5_preco, form.status]
 
     try {
         const id = db.query("INSERT INTO orcamentos (nome_cliente, sobrenome_cliente, dn, sexo, email, tel, nome_projeto, cidade, endereco, total, data, a_0_nome, a_0_m2, a_0_preco, a_1_nome, a_1_m2, a_1_preco, a_2_nome, a_2_m2, a_2_preco, a_3_nome, a_3_m2, a_3_preco, a_4_nome, a_4_m2, a_4_preco, a_5_nome, a_5_m2, a_5_preco,status) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30)", arrayOfResults)
@@ -605,13 +602,13 @@ passport.use(
             const storedHashedPassword = user.senha;
             bcrypt.compare(password, storedHashedPassword, (err, valid) => {
                 if (err) {
-                    console.log("Erro ao comparar senhas", err);
-                    return cb(err, { mensagem: "usuario ou senha incorretas" });
+                    console.log("Erro passport", err);
+                    return cb(err);
                 } else {
                     if (valid) {
                         return cb(null, user);
                     } else {
-                        return cb(null, false)
+                        return cb(null, false,{ message: "Usuário ou senha incorretos." })
 
                     }
                 }
@@ -619,7 +616,7 @@ passport.use(
 
         } else {
             console.log("Usuario não cadastrado")
-            return cb(null, false, { mensagem: "Usuario ou senha incorreta" })
+            return cb(null, false, { message: "Usuário ou senha incorretos." })
         }
 
 
@@ -666,7 +663,7 @@ async function getDbUsers(id) {
 
 async function getDbProject(name) {
     if (name == undefined) {
-        const result = await db.query("SELECT * FROM projetos")
+        const result = await db.query("SELECT * FROM projetos WHERE status='Em andamento'")
         return result.rows
     } else {
         const result = await db.query("SELECT * FROM projetos WHERE id = $1", [name]);

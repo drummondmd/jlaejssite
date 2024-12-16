@@ -308,14 +308,14 @@
                     </div>
                     <div class="col-12" id="adicionar-arquivos" style="display: none;">
                         <div>
-                            <form action="/link-add" method="post">
+                            <form action="/link-add" method="post" id="form-add-arq">
                                 <input name="id" type="number" readonly value="<%=projeto.id%>" hidden>
                                 <div class="row">
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="type" class="form-label">Tipo de documento</label>
-                                            <select class='form-control' name="type" id="type">
-                                                <option selected>...</option>
+                                            <select required class='form-control' name="type" id="type">
+                                                <option selected disabled>...</option>
                                                 <option value="spreadsheet">Tabela</option>
                                                 <option value="imagens">Imagens</option>
                                                 <option value="documentos">Documentos do projeto</option>
@@ -355,7 +355,8 @@
                                             link</button>
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-outline-primary col-12">Enviar link(s)</button>
+                                <button id="link-to-db" type="submit" class="btn btn-outline-primary col-12">Enviar
+                                    link(s)</button>
 
 
 
@@ -571,4 +572,7 @@
                 }
 
             })
+
+
+
         </script>

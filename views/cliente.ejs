@@ -1,21 +1,17 @@
 <%- include('partials/header.ejs') %>
 
     <style>
-
         #perfil {
             border-radius: 50%;
         }
-        body>.container{
-            height: 75vh;
-        }
     </style>
 
-    <div class="container my-5 bg-secondary-subtle rounded">
-        <div class="row h-100">
-            <div class="col-md-4 h-100 d-flex align-items-center">
+    <div class="container-lg my-lg-5 bg-secondary-subtle rounded">
+        <div class="row">
+            <div class="col-lg-4 d-flex align-items-center">
                 <div class="row">
 
-                    <div class="col-12 d-flex justify-content-center">
+                    <div class="col-lg-12 d-flex justify-content-center">
                         <% if(locals.user){%>
                             <% if(user.foto){ %>
                                 <img id="perfil" src="<%=user.foto%>" alt="" width="200px">
@@ -26,7 +22,7 @@
                                     <% } %>
                                         <% } %>
                     </div>
-                    <div class="col-12 text-center">
+                    <div class="col-lg-12 text-center">
                         <% if(locals.user){%>
                             <h3 class="h3">Seja bem Vindo,</h3>
                             <h3 class="h2">
@@ -39,12 +35,10 @@
 
                 </div>
 
-
-
             </div>
-            <div class="col-md-8">
-                <div class="row h-50">
-                    <div class="col-12 h-50">
+            <div class="col-lg-8">
+                <div class="row">
+                    <div class="col-12">
                         <h1 class="display-6">Projetos atuais</h1>
                         <div class="row">
                             <% if(locals.atuais){%>
@@ -56,7 +50,7 @@
 
                                         <% atuais.forEach(element=>{ %>
 
-                                            <div class="card m-2" style="width: 18rem;">
+                                            <div class="card z-1 m-2" style="width: 18rem;">
                                                 <a href="/detalhes-de-projeto/<%=element.project_id%>">
                                                     <div class="card-body">
                                                         <h5 class="card-title">
@@ -122,57 +116,11 @@
             </div>
         </div>
     </div>
+
+
+
+
+
+<!--Fim do div do header-->
     </div>
-
-
-
-
-
-    <!--Antigos-->
-
-    <div style="display: none;">
-
-        <section id="header-exclusive">
-
-
-        </section>
-
-        <section id="projetos">
-            <% if(locals.projetos){%>
-                <% if(projetos.length==0){ %>
-                    <p>
-                        Voce ainda não tem projetos
-                    </p>
-                    <% }else{ %>
-
-                        <% projetos.forEach(element=>{ %>
-                            <a href="/detalhes-de-projeto/<%=element.id%>">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="card-title">
-                                            <%= element.nome %>
-                                        </div>
-                                        <div class="card-subtitle">
-                                            <%= element.endereco %>
-                                        </div>
-                                        <div class="card-subtitle">
-                                            <%= element.finalidade %>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-
-                            <%}) %>
-
-                                <% } %>
-                                    <% } %>
-
-
-        </section>
-    </div>
-
-
-
-
-
     <%- include('partials/footer.ejs') %>

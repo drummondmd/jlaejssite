@@ -70,20 +70,23 @@
                   <button class="btn btn-primary col-12" type="submit">Entrar</button>
                 </div>
                 <div class="row mt-2">
-                  <div class="col">Ainda não cadastrado: <a class="link" href="/register">Registre</a></div>
-                  <div class="col text-center"><a href="/reiniciar-senha/no-token">Esqueceu a senha?</a></div>
-                </div>
-              </form>
-              <div>
-                <% if(locals.mensagem){%>
-                  <%=mensagem%>
-                    <%} %>
-              </div>
+                  <% if(locals.mensagem){%>
+                    <div class="col"><p style="color:red"><%=mensagem%></p></div>
 
+
+                      <%}else{%>
+                        <div class="col">Ainda não cadastrado: <a class="link" href="/register">Registre</a></div>
+               <% } %>
+
+                <div class="col text-center"><a href="/reiniciar-senha/no-token">Esqueceu a senha?</a></div>
             </div>
+            </form>
+
 
           </div>
+
         </div>
+      </div>
       </div>
 
 
