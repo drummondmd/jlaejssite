@@ -1,7 +1,7 @@
 import express, { query } from "express";
 import bodyParser from "body-parser";
 import pg from "pg";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import passport from "passport";
 import { Strategy } from "passport-local";
 import GoogleStrategy from "passport-google-oauth2";
@@ -10,11 +10,13 @@ import env from "dotenv";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
 import { errorMonitor } from "events";
+import connectionStringExternal from "./testDb.js";
 
 
 const app = express();
-const port = 3000;
 const saltRounds = 10;
+const port = process.env.PORT || 4000;
+
 env.config();
 
 app.use(
@@ -37,7 +39,7 @@ app.use(passport.session());
 const connectionString = 'postgresql://jlawebsite_user:UbAnnQQDKHphXHCEKYqmhg0FEHqAx8gG@dpg-ctg7opl6l47c73d8s720-a/jlawebsite'
 
 const db = new pg.Client({
-    connectionString: connectionString, ssl: true
+    connectionString: connectionStringExternal, ssl: true
 });
 db.connect();
 
