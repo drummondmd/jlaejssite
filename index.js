@@ -39,7 +39,7 @@ app.use(passport.session());
 const connectionString = 'postgresql://jlawebsite_user:UbAnnQQDKHphXHCEKYqmhg0FEHqAx8gG@dpg-ctg7opl6l47c73d8s720-a/jlawebsite'
 
 const db = new pg.Client({
-    connectionString: connectionStringExternal, ssl: true
+    connectionString: connectionString, ssl: true
 });
 db.connect();
 
