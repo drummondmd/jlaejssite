@@ -34,12 +34,10 @@ app.use(express.static("public"));
 app.use(passport.initialize());
 app.use(passport.session());
 
+const connectionString = 'postgresql://jlawebsite_user:UbAnnQQDKHphXHCEKYqmhg0FEHqAx8gG@dpg-ctg7opl6l47c73d8s720-a/jlawebsite'
+
 const db = new pg.Client({
-    user: process.env.PG_USER,
-    host: process.env.PG_HOST,
-    database: process.env.PG_DATABASE,
-    password: process.env.PG_PASSWORD,
-    port: process.env.PG_PORT,
+    connectionString: connectionString, ssl: true
 });
 db.connect();
 
@@ -63,7 +61,7 @@ app.get("/login", (req, res) => {
 
     } else {
         const error = req.session.messages
-        res.render("login.ejs",{mensagem:error?error[0]:null});
+        res.render("login.ejs", { mensagem: error ? error[0] : null });
     }
 
 });
@@ -229,7 +227,7 @@ app.post("/register", async (req, res) => {
                 } else {
                     await db.query("INSERT INTO usuarios (nome,sobrenome,nascimento,sexo,senha,email,administrador,tel) VALUES($1,$2,$3,$4,$5,$6,$7,$8)",
                         [
-                            req.body.nome, req.body.sobrenome, req.body.dn, req.body.sexo, hash, req.body.email, false,req.body.tel
+                            req.body.nome, req.body.sobrenome, req.body.dn, req.body.sexo, hash, req.body.email, false, req.body.tel
                         ])
                     res.render("login.ejs", { mensagem: "Usuario registrado com sucesso, faça login" })
                 }
@@ -250,19 +248,19 @@ app.post("/register", async (req, res) => {
 app.post("/updateUser/:id", async (req, res,) => {
     const id = req.params.id
 
-    if(req.body.novaSenha){
+    if (req.body.novaSenha) {
         console.log("passou")
         const tokenSecret = crypto.randomBytes(16).toString('hex');
         try {
-            await db.query('UPDATE usuarios SET token = ($1), senha = ($2) WHERE id = ($3);', [tokenSecret,null,id]);
+            await db.query('UPDATE usuarios SET token = ($1), senha = ($2) WHERE id = ($3);', [tokenSecret, null, id]);
             res.sendStatus(200)
 
         } catch (error) {
-            console.log(error,"erro ao inserir token e apagar senha atual")
+            console.log(error, "erro ao inserir token e apagar senha atual")
             res.send("Algo de errado aconteceu, contate suporte")
         }
 
-    }else{
+    } else {
         await queryUpdate("admninistrador", req.body.administrador, id)
         await queryUpdate("verificado", req.body.verificado, id)
 
@@ -509,7 +507,7 @@ app.post("/novo-orcamento", async (req, res) => {
 
     form['status'] = 'Em aberto'
     //fiquei com preguiça e coloquei 5 ambientes somente.
-    const arrayOfResults = [form.nome_cliente, form.sobrenome_cliente, form.dn?form.dn:null, form.sexo, form.email, form.tel, form.nome_projeto, form.cidade, form.endereco, form.total, form.data, form.a_0_nome, form.a_0_m2, form.a_0_preco, form.a_1_nome, form.a_1_m2, form.a_10_preco, form.a_2_nome, form.a_2_m2, form.a_2_preco, form.a_3_nome, form.a_3_m2, form.a_3_preco, form.a_4_nome, form.a_4_m2, form.a_4_preco, form.a_5_nome, form.a_5_m2, form.a_5_preco, form.status]
+    const arrayOfResults = [form.nome_cliente, form.sobrenome_cliente, form.dn ? form.dn : null, form.sexo, form.email, form.tel, form.nome_projeto, form.cidade, form.endereco, form.total, form.data, form.a_0_nome, form.a_0_m2, form.a_0_preco, form.a_1_nome, form.a_1_m2, form.a_10_preco, form.a_2_nome, form.a_2_m2, form.a_2_preco, form.a_3_nome, form.a_3_m2, form.a_3_preco, form.a_4_nome, form.a_4_m2, form.a_4_preco, form.a_5_nome, form.a_5_m2, form.a_5_preco, form.status]
 
     try {
         const id = db.query("INSERT INTO orcamentos (nome_cliente, sobrenome_cliente, dn, sexo, email, tel, nome_projeto, cidade, endereco, total, data, a_0_nome, a_0_m2, a_0_preco, a_1_nome, a_1_m2, a_1_preco, a_2_nome, a_2_m2, a_2_preco, a_3_nome, a_3_m2, a_3_preco, a_4_nome, a_4_m2, a_4_preco, a_5_nome, a_5_m2, a_5_preco,status) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30)", arrayOfResults)
@@ -560,7 +558,7 @@ app.route("/reiniciar-senha/:token")
                         res.send("Algum erro aconteceu")
                     } else {
                         try {
-                            await db.query('UPDATE usuarios SET senha = ($1),token = ($2) WHERE email = ($3);', [hash,null, email])
+                            await db.query('UPDATE usuarios SET senha = ($1),token = ($2) WHERE email = ($3);', [hash, null, email])
                             res.redirect("/login")
                         } catch (error) {
                             console.log(error, "Erro ao atualizar senha")
@@ -608,7 +606,7 @@ passport.use(
                     if (valid) {
                         return cb(null, user);
                     } else {
-                        return cb(null, false,{ message: "Usuário ou senha incorretos." })
+                        return cb(null, false, { message: "Usuário ou senha incorretos." })
 
                     }
                 }
