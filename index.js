@@ -40,7 +40,7 @@ const connectionString = 'postgresql://jlawebsite_user:UbAnnQQDKHphXHCEKYqmhg0FE
 
 ///external
 const db = new pg.Client({
-    connectionString: connectionStringExternal, ssl:true
+    connectionString: connectionString
 });
 
 //internal
